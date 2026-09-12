@@ -1,6 +1,6 @@
 ---
 name: sdlc-architect
-description: "Guide application development through iterative SDLC phases, repo-native documentation, architecture decisions, and grounded Mermaid UML diagrams."
+description: "Guide application development through iterative SDLC phases, UML diagrams, and anti-slop quality gates for grounded, usable interfaces."
 ---
 
 # SDLC Architect
@@ -17,6 +17,7 @@ Use this skill when the user wants to plan, design, document, build, test, or ev
 - Do not invent users, metrics, integrations, compliance claims, domain rules, or completed work. Mark unknowns, assumptions, and decisions distinctly.
 - Mermaid diagrams must explain a real requirement, interaction, structure, or operational concern. Keep them consistent with the surrounding text and update them when the model changes.
 - Only make code, configuration, or documentation changes that belong to the requested phase or increment. Confirm before broad refactors, destructive migrations, production actions, or changes outside the project.
+- Apply the anti-slop gate whenever the increment touches a UI, user-facing copy, responsive layout, accessibility, visual asset, or code comments. The gate is a quality filter, not a substitute for product direction or functional testing.
 
 ## Phase routing
 
@@ -37,6 +38,8 @@ For a new request, first report the discovered context, the proposed increment, 
 Read [references/sdlc-workflow.md](references/sdlc-workflow.md) when planning a lifecycle, defining artifacts, establishing gates, or handling an existing project with incomplete requirements.
 
 Read [references/uml-mermaid.md](references/uml-mermaid.md) when selecting, creating, reviewing, or updating UML/Mermaid diagrams. Use the smallest set of diagrams that makes the decision or behavior understandable; do not generate every diagram by default.
+
+Read [references/antislop-integration.md](references/antislop-integration.md) before any UI, copy, responsive, accessibility, visual-asset, or code-comment work. It defines when to load the available antislop core and optional concern skills, how to handle missing design direction, and the delivery gate to report.
 
 Prefer these artifact relationships:
 
