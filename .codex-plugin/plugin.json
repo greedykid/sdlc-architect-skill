@@ -1,0 +1,29 @@
+{
+  "name": "sdlc-architect",
+  "version": "0.1.0",
+  "description": "Guide application development through iterative SDLC phases, UML diagrams, and anti-slop quality gates.",
+  "author": {
+    "name": "Rizki Arbiansyah"
+  },
+  "homepage": "https://github.com/greedykid/sdlc-architect-skill",
+  "repository": "https://github.com/greedykid/sdlc-architect-skill",
+  "license": "MIT",
+  "keywords": [
+    "sdlc",
+    "agile",
+    "uml",
+    "mermaid",
+    "software-architecture",
+    "anti-slop",
+    "agent-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SDLC Architect",
+    "shortDescription": "Build apps with SDLC, UML, and anti-slop gates",
+    "longDescription": "Guides application development from discovery through maintenance with repo-native artifacts, grounded Mermaid diagrams, and anti-slop quality gates for interface work.",
+    "developerName": "Rizki Arbiansyah",
+    "category": "Productivity",
+    "brandColor": "#1F2937"
+  }
+}

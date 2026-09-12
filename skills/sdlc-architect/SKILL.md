@@ -23,13 +23,13 @@ Use this skill when the user wants to plan, design, document, build, test, or ev
 
 Identify the current phase from the user's request and repository state. Do not force the entire lifecycle when the user asks for a focused artifact.
 
-1. **Discovery** — establish the problem, actors, goals, constraints, non-goals, and success signals.
-2. **Requirements** — turn validated needs into use cases, acceptance criteria, backlog items, quality attributes, and open decisions.
-3. **Architecture** — choose boundaries, responsibilities, data ownership, integrations, deployment shape, and important trade-offs.
-4. **Technical design** — refine the selected increment into interfaces, data models, flows, failure behavior, and implementation tasks.
-5. **Implementation** — change code/configuration in a bounded increment, preserving the agreed behavior and conventions.
-6. **Verification** — run or add proportionate tests, review traceability, validate diagrams and documentation, and report remaining risk.
-7. **Delivery and maintenance** — document release steps, observability, rollback or recovery expectations, and follow-up work.
+1. **Discovery:** establish the problem, actors, goals, constraints, non-goals, and success signals.
+2. **Requirements:** turn validated needs into use cases, acceptance criteria, backlog items, quality attributes, and open decisions.
+3. **Architecture:** choose boundaries, responsibilities, data ownership, integrations, deployment shape, and important trade-offs.
+4. **Technical design:** refine the selected increment into interfaces, data models, flows, failure behavior, and implementation tasks.
+5. **Implementation:** change code/configuration in a bounded increment, preserving the agreed behavior and conventions.
+6. **Verification:** run or add proportionate tests, review traceability, validate diagrams and documentation, and report remaining risk.
+7. **Delivery and maintenance:** document release steps, observability, rollback or recovery expectations, and follow-up work.
 
 For a new request, first report the discovered context, the proposed increment, assumptions, and the acceptance criteria. Then produce or update only the artifacts needed to move that increment forward. At the end, summarize changed files, verification evidence, unresolved risks, and the next smallest useful increment.
 
