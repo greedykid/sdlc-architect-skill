@@ -22,6 +22,8 @@ The root plugin manifests make the skill discoverable as a Codex plugin. The ski
 - Traceability between requirements, design decisions, implementation, and tests.
 - Use case, activity, sequence, class/domain, component, and deployment diagrams in Mermaid.
 - Anti-slop routing for UI, copy, accessibility, responsive layout, visual assets, and code comments.
+- Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
+- Reusable artifact templates and behavioral forward-test scenarios.
 
 ## Validation
 
@@ -29,6 +31,8 @@ Run the repository guardrail check:
 
 ```bash
 node scripts/check-repo.mjs
+node scripts/check-mermaid.mjs
+node scripts/check-scenarios.mjs
 ```
 
 The skill itself can also be validated with the Codex skill validator:

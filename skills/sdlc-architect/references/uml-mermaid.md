@@ -57,3 +57,9 @@ Before finalizing a diagram, check:
 6. Does Mermaid render with the project's chosen renderer or a compatible Mermaid version?
 
 If rendering cannot be checked, validate syntax as far as tooling permits and disclose the limitation.
+
+## Automated validation
+
+Run `node scripts/check-mermaid.mjs` from the repository root when Mermaid blocks are added or changed. The check verifies fenced-block closure, a recognized diagram declaration, and non-empty content. It is a structural check, not proof that every renderer or semantic relationship is correct.
+
+If the project has a Mermaid renderer, add its render check to the project-specific verification command. A syntax pass never replaces review against requirements and acceptance criteria.

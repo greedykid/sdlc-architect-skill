@@ -18,3 +18,7 @@ jobs:
           node-version: 20
       - name: Repository guardrails
         run: node scripts/check-repo.mjs
+      - name: Mermaid structure
+        run: node scripts/check-mermaid.mjs
+      - name: Behavioral scenario catalog
+        run: node scripts/check-scenarios.mjs

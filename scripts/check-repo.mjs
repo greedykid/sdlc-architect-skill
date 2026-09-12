@@ -11,8 +11,13 @@ const requiredFiles = [
   'skills/sdlc-architect/SKILL.md',
   'skills/sdlc-architect/agents/openai.yaml',
   'skills/sdlc-architect/references/antislop-integration.md',
+  'skills/sdlc-architect/references/artifact-templates.md',
+  'skills/sdlc-architect/references/quality-gates.md',
   'skills/sdlc-architect/references/sdlc-workflow.md',
   'skills/sdlc-architect/references/uml-mermaid.md',
+  'scripts/check-mermaid.mjs',
+  'scripts/check-scenarios.mjs',
+  'tests/behavioral-scenarios.md',
 ]
 
 const errors = []
