@@ -43,6 +43,7 @@ Iterative software delivery with grounded UML and anti-slop quality gates.
   -t, --templates        Also copy artifact templates (templates/project-state.md)
   --state                Generate initial docs/project-state.md during init
   --adr                  Initialize docs/adr/ directory with ADR-0001
+  --github               Initialize .github/ pull request and issue templates
   -f, --force            Overwrite existing files without prompting
   -h, --help             Show help
   -v, --version          Show version
@@ -147,7 +148,7 @@ function runInstall(options) {
 }
 
 function runAdapter(platform, force) {
-  const validPlatforms = ['cursor', 'claude', 'copilot', 'windsurf', 'all'];
+  const validPlatforms = ['cursor', 'claude', 'copilot', 'windsurf', 'github', 'all'];
   const p = (platform || 'all').toLowerCase();
 
   if (!validPlatforms.includes(p)) {
@@ -155,10 +156,33 @@ function runAdapter(platform, force) {
     process.exit(1);
   }
 
-  const platformsToApply = p === 'all' ? ['cursor', 'claude', 'copilot', 'windsurf'] : [p];
+  const platformsToApply = p === 'all' ? ['cursor', 'claude', 'copilot', 'windsurf', 'github'] : [p];
   console.log(`\n\x1b[1mGenerating Agent Adapters\x1b[0m...\n`);
 
   for (const item of platformsToApply) {
+    if (item === 'github') {
+      const prDest = path.resolve(cwd, '.github/pull_request_template.md');
+      const prSrc = path.join(packageRoot, 'templates/github/pull_request_template.md');
+      const issuesDest = path.resolve(cwd, '.github/ISSUE_TEMPLATE');
+      const issuesSrc = path.join(packageRoot, 'templates/github/ISSUE_TEMPLATE');
+
+      try {
+        fs.mkdirSync(path.dirname(prDest), { recursive: true });
+        if (!fs.existsSync(prDest) || force) {
+          fs.copyFileSync(prSrc, prDest);
+          console.log(`  \x1b[32m✔\x1b[0m Generated \x1b[1mgithub\x1b[0m PR template -> .github/pull_request_template.md`);
+        }
+        if (!fs.existsSync(issuesDest) || force) {
+          fs.mkdirSync(issuesDest, { recursive: true });
+          fs.cpSync(issuesSrc, issuesDest, { recursive: true, force: true });
+          console.log(`  \x1b[32m✔\x1b[0m Generated \x1b[1mgithub\x1b[0m issue templates -> .github/ISSUE_TEMPLATE/`);
+        }
+      } catch (err) {
+        console.error(`  \x1b[31m✖\x1b[0m Failed generating github templates: ${err.message}`);
+      }
+      continue;
+    }
+
     let destRelative = '';
     let srcFile = '';
 
@@ -397,6 +421,11 @@ function runInit(options) {
     }
   }
 
+  // 5. Initialize GitHub templates if requested
+  if (options.github) {
+    runAdapter('github', options.force);
+  }
+
   console.log('\n\x1b[32mInitialization complete!\x1b[0m Your repository is ready for traceable SDLC workflows.\n');
 }
 
@@ -411,6 +440,7 @@ function parseArgs() {
     platform: null,
     state: false,
     adr: false,
+    github: false,
     param: null,
   };
 
@@ -482,6 +512,10 @@ function parseArgs() {
     }
     if (arg === '--adr') {
       options.adr = true;
+      continue;
+    }
+    if (arg === '--github') {
+      options.github = true;
       continue;
     }
     if ((arg === '-d' || arg === '--dest') && i + 1 < args.length) {

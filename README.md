@@ -58,6 +58,7 @@ npx sdlc-architect adapter cursor    # creates .cursor/rules/sdlc-architect.mdc
 npx sdlc-architect adapter claude    # creates CLAUDE.md
 npx sdlc-architect adapter copilot   # creates .github/copilot-instructions.md
 npx sdlc-architect adapter windsurf  # creates .windsurfrules
+npx sdlc-architect adapter github    # creates .github/pull_request_template.md and issue templates
 npx sdlc-architect adapter all       # generates all adapters
 
 # 4. Scaffold a new Architecture Decision Record (ADR)
@@ -76,7 +77,7 @@ npx sdlc-architect doctor
 |---|---|---|
 | `install [dir]` | | Install skill(s) to destination directory (default: `./skills`) |
 | `init [options]` | | Full initialization: copies skills, configures agent rules, state, and ADRs |
-| `adapter <platform>` | | Generate agent adapter (`cursor`, `claude`, `copilot`, `windsurf`, `all`) |
+| `adapter <platform>` | | Generate agent adapter (`cursor`, `claude`, `copilot`, `windsurf`, `github`, `all`) |
 | `adr <title>` | | Scaffold a numbered ADR in `docs/adr/000X-<slug>.md` |
 | `check-mermaid [path]` | | Validate Mermaid diagram syntax and fences in Markdown files |
 | `doctor`, `check` | | Health check: validates skills, project state, ADRs, and Mermaid diagrams |
@@ -84,9 +85,10 @@ npx sdlc-architect doctor
 | `--dest <path>` | `-d` | Destination directory for skills |
 | `--all` | `-a` | Install `sdlc-architect` and all bundled antislop concern skills |
 | `--skill <name>` | `-s` | Install a specific skill (e.g. `antislop-ui`) |
-| `--platform <name>` | `-p` | Specify agent platform adapter (`cursor`, `claude`, `copilot`, `windsurf`, `all`) |
+| `--platform <name>` | `-p` | Specify agent platform adapter (`cursor`, `claude`, `copilot`, `windsurf`, `github`, `all`) |
 | `--state` | | Generate initial `docs/project-state.md` |
 | `--adr` | | Initialize `docs/adr/` with `0001-record-architecture-decisions.md` |
+| `--github` | | Initialize `.github/` with pull request and issue templates |
 | `--templates` | `-t` | Also copy artifact templates |
 | `--force` | `-f` | Overwrite existing files if destination already exists |
 
@@ -120,10 +122,15 @@ This package vendors the core, UI, copywriting, human, responsive layout, and co
 - Anti-slop routing for UI, copy, accessibility, responsive layout, visual assets, and code comments.
 - Vendored antislop core plus UI, copywriting, human, mobile, and code-comment concern skills.
 - Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
+- Increment sizing standards (S/M/L/XL) and automatic task-splitting protocol to prevent scope creep.
+- Architecture drift detection and layer boundary validation against accepted ADRs.
+- Zero-downtime database migration playbooks (Expand-Contract) and rollback decision matrix.
+- Production Readiness Review (PRR) & Observability blueprint covering the Four Golden Signals, `/healthz`, `/readyz`, and structured logging.
+- GitHub Pull Request and Issue templates for end-to-end requirement-to-PR traceability.
 - Reusable artifact templates and behavioral forward-test scenarios.
 - Traceability IDs and matrix, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, monorepo boundaries, and maintenance governance.
 - Cross-session project state, backlog iteration, evidence grading, command discovery, migration rollback, and isolated forward-test evaluation.
-- API and dependency lifecycle, lightweight threat modeling, prompt-injection boundaries, and project-state schema validation.
+- API and dependency lifecycle, STRIDE threat modeling, prompt-injection boundaries, and project-state schema validation.
 - Versioned releases with [CHANGELOG.md](CHANGELOG.md) and the [release process](RELEASING.md).
 
 ## Validation

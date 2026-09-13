@@ -115,15 +115,38 @@ Decision: <approved, blocked, or needs clarification>
 
 ## Observability and delivery gate
 
-For a service, background job, integration, or data-affecting UI flow, define only the signals needed to operate the increment:
+For any deployed service, background job, integration, or critical user flow, apply this **Production Readiness Review (PRR) & Observability Blueprint**:
 
-- structured log events and fields, with secrets and sensitive values excluded;
-- metrics for success, failure, latency, saturation, queue depth, or business outcome when useful;
-- correlation or request IDs across boundaries;
-- traces for multi-service or slow operations when the project supports them;
-- health or readiness signals where deployment depends on them;
-- alert threshold, owner, and expected response for material failures;
-- rollback, retry, replay, or manual recovery procedure;
-- release notes describing configuration, migration, and monitoring changes.
+### 1. Health and readiness probe contract
+Every deployed backend service should implement dual probes:
+- **Liveness Probe (`/healthz`)**: Verifies the process is alive. Must be fast and independent of external services (do NOT check database here to avoid cascading pod restarts during DB failovers).
+- **Readiness Probe (`/readyz`)**: Verifies the service can accept traffic. Checks local connection pools, cache connectivity, and startup initialization. Returns `503 Service Unavailable` during startup or shutdown drains.
 
-The Delivery gate must state which signals were added or verified, who owns them, and what happens when they indicate failure. Do not add dashboards or alerts merely to fill a checklist.
+### 2. The Four Golden Signals
+Instrument the increment to report or log the four essential operational signals:
+
+| Signal | What to Measure | Standard Threshold / Action |
+|---|---|---|
+| **Latency** | Request duration (p50, p95, p99) | Separate successful latency from fast error responses. Alert on p99 degradation. |
+| **Traffic** | Requests per second, active jobs, queue depth | Monitor sudden spikes or abnormal drops. |
+| **Errors** | HTTP 5xx responses, unhandled exceptions | Alert on error rate > 1% over 5-minute rolling window. |
+| **Saturation** | Database pool usage, memory, thread pool queue | Alert before saturation exceeds 80% capacity to prevent brownout. |
+
+### 3. Structured logging and distributed tracing
+- Emit logs in structured JSON format with: `timestamp`, `level`, `service`, `trace_id` (or `request_id`), `duration_ms`, and `message`.
+- Extract or generate `X-Request-ID` at the system ingress and propagate it across internal HTTP calls, background jobs, and DB query tags.
+- Sanitize logs: Redact passwords, authorization headers, bearer tokens, credit cards, and PII.
+
+### 4. Graceful termination
+- Catch `SIGTERM` / `SIGINT`:
+  1. Stop accepting new requests (readiness probe returns 503).
+  2. Allow in-flight requests to complete within a bounded grace period (e.g., 10–30 seconds).
+  3. Close database connections and background workers cleanly.
+
+### 5. Delivery Gate Checklist
+The Delivery gate must confirm:
+- [ ] Liveness (`/healthz`) and readiness (`/readyz`) probes are defined.
+- [ ] Correlation IDs are propagated across boundary hops.
+- [ ] Alerts, ownership, and expected response runbooks are established for new failure modes.
+- [ ] Graceful shutdown and timeout boundaries are respected.
+- [ ] Release notes describe configuration, migration, and monitoring changes.

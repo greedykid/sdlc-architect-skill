@@ -183,3 +183,26 @@ During verification and maintenance, look for artifacts that no longer match the
 - generated docs or clients that are older than their source contract.
 
 Mark each item `Current`, `Needs update`, `Superseded`, or `Unknown`. Update, archive, or explicitly assign the item. Do not silently delete a stale artifact when it explains why an earlier decision was made.
+
+## Architecture drift detection
+
+Architectural drift occurs when implementation diverges from accepted ADRs, domain models, or Mermaid diagrams without an explicit architectural decision.
+
+During Audit and Verification modes, audit for these drift patterns:
+
+1. **Layer Boundary Violations**:
+   - UI/Presentation layer calling database repositories directly.
+   - Controllers implementing core domain logic instead of delegating to domain services.
+   - Circular imports between modules or packages.
+2. **Undeclared Dependencies**:
+   - New external libraries or cloud services added without evaluation against the ADR lifecycle.
+   - Bypassing declared internal gateway contracts to reach internal microservices.
+3. **Data & Contract Divergence**:
+   - New tables, foreign keys, or enum variants present in code/migrations but missing from ER/Domain Mermaid diagrams.
+   - Public endpoint response schemas returning undocumented fields.
+
+### Drift Remediation Protocol
+
+- **Intentional Evolution**: If the code reflects an agreed change in requirements, update the corresponding Mermaid diagram and document an ADR update in the same increment.
+- **Accidental Drift**: If the deviation is an architectural violation (e.g. shortcut, leaky abstraction), reject or refactor the code to respect system boundaries before marking Done.
+- **Reporting**: Report all detected drift in the Verification snapshot under `Architectural Alignment: Verified | Drift Remedied | Technical Debt Recorded`.

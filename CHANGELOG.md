@@ -2,6 +2,16 @@
 
 All notable changes to this skill are documented here. Each released version uses the matching Git tag `vX.Y.Z` and GitHub Release.
 
+## [0.6.3] - 2026-09-13
+
+### Added
+
+- Increment sizing standards (S/M/L/XL) and auto-splitting protocol in `references/iteration.md` to prevent scope creep.
+- Architecture drift detection protocol in `references/project-governance.md` for boundary validation against accepted ADRs.
+- Zero-downtime database migration playbooks (phased column rename, safe NOT NULL addition, batch throttling) and rollback matrix in `references/migration.md`.
+- Production Readiness Review (PRR) & Observability blueprint covering health/readiness probes (`/healthz`, `/readyz`), Four Golden Signals, and structured JSON logging in `references/quality-gates.md`.
+- GitHub Pull Request and Issue templates (`templates/github/`) with CLI integration (`npx sdlc-architect adapter github` and `init --github`).
+
 ## [0.6.2] - 2026-09-13
 
 ### Changed
