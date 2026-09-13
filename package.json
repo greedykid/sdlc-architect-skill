@@ -1,6 +1,6 @@
 {
   "name": "sdlc-architect",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Agent skill for developing applications through an iterative SDLC workflow with repo-native documentation, Mermaid UML diagrams, and anti-slop quality gates.",
   "type": "module",
   "main": "./bin/cli.mjs",

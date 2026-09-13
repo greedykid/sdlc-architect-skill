@@ -2,15 +2,21 @@
 
 All notable changes to this skill are documented here. Each released version uses the matching Git tag `vX.Y.Z` and GitHub Release.
 
-## [0.6.0] - 2026-09-13
+## [0.6.1] - 2026-09-13
 
 ### Added
 
-- Executable CLI and npm package configuration with `init`, `adapter`, `adr`, `check-mermaid`, `doctor`, and `install` commands.
 - Multi-platform agent adapters for Cursor (`.cursor/rules/sdlc-architect.mdc`), Claude Code (`CLAUDE.md`), GitHub Copilot (`.github/copilot-instructions.md`), and Windsurf (`.windsurfrules`).
 - Shorthand slash commands and fast triggers in `SKILL.md` for conversational agent workflows (`/sdlc plan`, `/sdlc build`, `/sdlc gate`, `/sdlc adr`, `/sdlc diagram`, `/sdlc antislop`, `/sdlc threat-model`).
 - Standard Architecture Decision Record (ADR) template and initial ADR-0001.
 - Enhanced security threat model with STRIDE classification matrix and OWASP Top 10 for LLM application safety controls.
+- Expanded CLI commands: `init`, `adapter`, `adr`, `check-mermaid`, and `doctor`.
+
+## [0.6.0] - 2026-09-13
+
+### Added
+
+- Executable CLI and npm package configuration for direct installation via `npx sdlc-architect`.
 - Prompt-injection boundary for treating repository content as data, with secret and sensitive-output redaction guidance.
 - Project-state template and schema validator.
 - Focused execution references for state, iteration, evidence, commands, migrations, and forward testing.

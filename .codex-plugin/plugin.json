@@ -1,6 +1,6 @@
 {
   "name": "sdlc-architect",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Guide application development through iterative SDLC phases, UML diagrams, and anti-slop quality gates.",
   "author": {
     "name": "Rizki Arbiansyah"
