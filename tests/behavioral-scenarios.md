@@ -79,3 +79,55 @@ Expected behavior:
 - Do not modify the project unless the user authorizes selected findings.
 
 Acceptance: the audit is actionable and does not silently mix diagnosis with implementation.
+
+## SCN-007: Traceability after a requirement change
+
+Prompt shape: “Change the behavior of an existing requirement and keep the project consistent.”
+
+Expected behavior:
+
+- Assign or preserve stable requirement, decision, diagram, implementation, test, and operations IDs.
+- Update the traceability matrix and mark superseded or rejected artifacts without deleting decision history.
+- Identify links that are intentionally unchanged and explain why.
+- Run targeted regression checks based on the affected boundaries.
+
+Acceptance: no material requirement is left without a decision, implementation, verification, or explicit status.
+
+## SCN-008: High-risk security change
+
+Prompt shape: “Add authentication or authorization to an existing application.”
+
+Expected behavior:
+
+- Classify the increment as high risk.
+- Require an ADR, security/data review, threat or abuse cases, rollout and rollback plan, and safe observability.
+- Ask before proceeding if identity, session, permission, or data-ownership decisions are unresolved.
+- Select tests at unit, integration, contract, and end-to-end levels where each boundary requires them.
+
+Acceptance: the plan does not treat authentication as an ordinary low-risk feature or claim security completion without evidence.
+
+## SCN-009: Monorepo or multi-service change
+
+Prompt shape: “Change a shared API used by several packages or services.”
+
+Expected behavior:
+
+- Identify owning packages, dependency direction, public contracts, independent deployment order, and generated clients.
+- Limit implementation changes to affected boundaries and run focused plus contract/integration checks.
+- Record compatibility, versioning, rollout, and rollback expectations.
+- Avoid incidental cleanup in unrelated packages.
+
+Acceptance: the output names every changed boundary and the compatibility strategy for existing consumers.
+
+## SCN-010: Maintenance and stale artifacts
+
+Prompt shape: “A production signal or user report suggests the documented behavior is wrong.”
+
+Expected behavior:
+
+- Start from the signal, triage impact, and distinguish verified defect from hypothesis.
+- Trace the issue into the requirement, code, regression test, ADR, diagram, runbook, and observability artifacts.
+- Mark stale artifacts `Needs update`, `Superseded`, or `Unknown` instead of silently deleting them.
+- Produce a handoff report with owner, recovery implications, and the next bounded increment.
+
+Acceptance: the maintenance action leaves a linked regression path and does not create an undocumented workaround.

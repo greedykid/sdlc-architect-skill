@@ -21,6 +21,7 @@ Use this skill when the user wants to plan, design, document, build, test, or ev
 - Start each task with a concise context snapshot: repository state, stack and entry points, current SDLC phase, scope, assumptions, risks, acceptance criteria, and affected artifacts.
 - Use the Definition of Ready before implementation and the Definition of Done before delivery. Read [references/quality-gates.md](references/quality-gates.md) for the checklists and impact analysis protocol.
 - Use [references/artifact-templates.md](references/artifact-templates.md) when a new brief, requirement, ADR, contract, data change, test plan, or release note is needed. Adapt templates to existing project conventions.
+- Maintain traceability from requirement to decision, diagram, implementation, test, and operational evidence. Read [references/project-governance.md](references/project-governance.md) for ID conventions, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, and maintenance rules.
 
 ## Phase routing
 
@@ -35,6 +36,8 @@ Identify the current phase from the user's request and repository state. Do not 
 7. **Delivery and maintenance:** document release steps, observability, rollback or recovery expectations, and follow-up work.
 
 For a new request, first report the discovered context, the proposed increment, assumptions, and the acceptance criteria. Then produce or update only the artifacts needed to move that increment forward. At the end, summarize changed files, verification evidence, unresolved risks, and the next smallest useful increment.
+
+Use the phase entry and exit criteria in `references/project-governance.md`. A phase may be revisited when evidence changes; never advance only because a document was produced.
 
 ## Work modes
 
@@ -58,6 +61,8 @@ Read [references/quality-gates.md](references/quality-gates.md) for context snap
 
 Read [references/artifact-templates.md](references/artifact-templates.md) when creating a new SDLC artifact rather than extending an existing project template.
 
+Read [references/project-governance.md](references/project-governance.md) when the work involves traceability, a phase transition, risk classification, an existing project baseline, test-level selection, architecture decisions, monorepo or multi-service boundaries, handoff, maintenance, or stale artifacts.
+
 Prefer these artifact relationships:
 
 - problem and goals → requirements/use cases → acceptance criteria;
@@ -74,6 +79,8 @@ When requirements change, identify affected requirements, diagrams, decisions, c
 
 Use the impact analysis in `references/quality-gates.md` for any change affecting public interfaces, persisted data, permissions, security, deployment, or compatibility. A change is not Ready until its migration, rollback, regression, and communication implications are understood.
 
+For requirement status changes, mark items as `Active`, `Superseded`, `Rejected`, or `Done` and update the traceability matrix. Do not delete a requirement, test, ADR, or diagram merely because it is no longer current; preserve the decision history and mark the artifact's current status.
+
 ## Language and terminology
 
 - Use the user's language for conversation unless the project clearly uses another language.
@@ -83,4 +90,4 @@ Use the impact analysis in `references/quality-gates.md` for any change affectin
 
 ## Completion standard
 
-An increment is complete only when it passes the Definition of Done. That includes acceptance criteria, relevant tests or checks, diagram and artifact consistency, security/data review, observability and recovery implications, and visible remaining risks or follow-ups. Do not claim a phase is complete solely because a document or diagram was created.
+An increment is complete only when it passes the Definition of Done and has the final report shape defined in `references/project-governance.md`. That includes acceptance criteria, relevant tests or checks, diagram and artifact consistency, security/data review, observability and recovery implications, and visible remaining risks or follow-ups. Do not claim a phase is complete solely because a document or diagram was created.

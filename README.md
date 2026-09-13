@@ -27,6 +27,7 @@ The root plugin manifests make the skill discoverable as a Codex plugin. The ant
 - Vendored antislop core plus UI, copywriting, human, mobile, and code-comment concern skills.
 - Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
 - Reusable artifact templates and behavioral forward-test scenarios.
+- Traceability IDs and matrix, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, monorepo boundaries, and maintenance governance.
 
 ## Validation
 
@@ -36,6 +37,7 @@ Run the repository guardrail check:
 node scripts/check-repo.mjs
 node scripts/check-mermaid.mjs
 node scripts/check-scenarios.mjs
+node scripts/check-governance.mjs
 ```
 
 The skill itself can also be validated with the Codex skill validator:

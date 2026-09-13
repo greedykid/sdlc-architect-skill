@@ -22,11 +22,13 @@ const requiredFiles = [
   'skills/sdlc-architect/references/antislop-integration.md',
   'skills/sdlc-architect/references/artifact-templates.md',
   'skills/sdlc-architect/references/quality-gates.md',
+  'skills/sdlc-architect/references/project-governance.md',
   'skills/sdlc-architect/references/sdlc-workflow.md',
   'skills/sdlc-architect/references/uml-mermaid.md',
   'scripts/check-mermaid.mjs',
   'scripts/check-scenarios.mjs',
   'tests/behavioral-scenarios.md',
+  'scripts/check-governance.mjs',
 ]
 
 const errors = []

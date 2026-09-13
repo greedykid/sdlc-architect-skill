@@ -115,3 +115,37 @@ Observe: <logs, metrics, traces, alerts, owner>
 Rollback/recovery: <procedure and limits>
 Compatibility and communication: <clients, docs, support>
 ```
+
+## Traceability matrix
+
+```markdown
+| Requirement | Decision/design | Diagram or contract | Implementation | Verification | Operations | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| REQ-001 | ADR-001 | SEQ-001, API-001 | src/... | TEST-001 | OPS-001 | Active |
+```
+
+## Existing-project baseline
+
+```markdown
+Project classification: Greenfield | Documented existing | Undocumented existing | Unhealthy baseline
+Repository shape and boundaries: <packages, services, entry points>
+Commands: <build, test, lint, type, migration, deploy>
+Pre-existing failures: <command, output, impact>
+Existing conventions and artifacts: <docs, IDs, ADRs, diagrams>
+Environment limitations: <missing tools, services, or credentials>
+Ownership and integrations: <teams, services, data stores>
+```
+
+## Final handoff report
+
+```markdown
+Mode and phase: <Plan | Build | Audit; current phase>
+Increment or audit scope: <what was handled>
+Context and baseline: <relevant repository facts and pre-existing failures>
+Changes or findings: <files, artifacts, or numbered findings>
+Traceability: <requirement IDs and linked decisions, tests, diagrams, operations>
+Verification: <commands, test levels, manual checks, and outcomes>
+Security/data/operations: <review, signals, rollback, and ownership>
+Risks and open decisions: <what remains and impact>
+Next increment: <smallest useful follow-up>
+```
