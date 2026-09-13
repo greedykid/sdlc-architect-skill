@@ -41,43 +41,70 @@ skills/sdlc-architect/
 
 The root plugin manifests make the skill discoverable as a Codex plugin. The antislop bundle is available beside it under `skills/antislop*`. `skills/antislop-human/` also includes the contrast checker and its MCP launcher. The SDLC skill can also be copied from `skills/sdlc-architect/` into an Agent Skills-compatible skills directory.
 
-## Installation
+## Installation & Quickstart
 
-You can quickly install this skill into any repository or agent workspace using `npx`:
+You can quickly initialize or install this skill into any repository or agent workspace using `npx`:
 
 ```bash
-# Install sdlc-architect to ./skills/sdlc-architect
-npx sdlc-architect
+# 1. Full interactive/automated setup (skills + Cursor adapter + state + ADRs)
+npx sdlc-architect init --all --platform cursor --state --adr
 
-# Or install sdlc-architect along with all bundled antislop concern skills
+# 2. Or install sdlc-architect skills only (default to ./skills)
+npx sdlc-architect
 npx sdlc-architect --all
 
-# Or specify a custom target directory (e.g. for Codex, Claude Code, or Cursor)
-npx sdlc-architect install .agents/skills --all
-npx sdlc-architect install .claude/skills
+# 3. Generate platform-specific rules for your AI coding assistant
+npx sdlc-architect adapter cursor    # creates .cursor/rules/sdlc-architect.mdc
+npx sdlc-architect adapter claude    # creates CLAUDE.md
+npx sdlc-architect adapter copilot   # creates .github/copilot-instructions.md
+npx sdlc-architect adapter windsurf  # creates .windsurfrules
+npx sdlc-architect adapter all       # generates all adapters
 
-# Also copy artifact templates (templates/project-state.md)
-npx sdlc-architect --templates
+# 4. Scaffold a new Architecture Decision Record (ADR)
+npx sdlc-architect adr "use-redis-for-session-caching"
 
-# Overwrite existing destination files
-npx sdlc-architect --force
+# 5. Validate Mermaid diagrams in your Markdown docs (prevent broken diagrams in CI)
+npx sdlc-architect check-mermaid ./docs
 
-# List available bundled skills
-npx sdlc-architect list
+# 6. Run repository health check
+npx sdlc-architect doctor
 ```
 
-### CLI Options
+### CLI Reference
 
-| Option | Alias | Description |
+| Command / Option | Alias | Description |
 |---|---|---|
-| `--dest <path>` | `-d` | Destination directory (default: `./skills`) |
+| `install [dir]` | | Install skill(s) to destination directory (default: `./skills`) |
+| `init [options]` | | Full initialization: copies skills, configures agent rules, state, and ADRs |
+| `adapter <platform>` | | Generate agent adapter (`cursor`, `claude`, `copilot`, `windsurf`, `all`) |
+| `adr <title>` | | Scaffold a numbered ADR in `docs/adr/000X-<slug>.md` |
+| `check-mermaid [path]` | | Validate Mermaid diagram syntax and fences in Markdown files |
+| `doctor`, `check` | | Health check: validates skills, project state, ADRs, and Mermaid diagrams |
+| `list` | | List bundled skills and descriptions |
+| `--dest <path>` | `-d` | Destination directory for skills |
 | `--all` | `-a` | Install `sdlc-architect` and all bundled antislop concern skills |
 | `--skill <name>` | `-s` | Install a specific skill (e.g. `antislop-ui`) |
-| `--templates` | `-t` | Also copy artifact templates (`templates/project-state.md`) |
+| `--platform <name>` | `-p` | Specify agent platform adapter (`cursor`, `claude`, `copilot`, `windsurf`, `all`) |
+| `--state` | | Generate initial `docs/project-state.md` |
+| `--adr` | | Initialize `docs/adr/` with `0001-record-architecture-decisions.md` |
+| `--templates` | `-t` | Also copy artifact templates |
 | `--force` | `-f` | Overwrite existing files if destination already exists |
-| `list`, `--list` | | List bundled skills available to install |
-| `--help` | `-h` | Show CLI help |
-| `--version` | `-v` | Show CLI version |
+
+## Shorthand Slash Commands
+
+When interacting with an AI coding agent (Cursor, Claude Code, Codex, Copilot, etc.), trigger workflow phases with these shorthand commands:
+
+| Command | Phase / Mode | What the Agent Does |
+|---|---|---|
+| `/sdlc plan <feature>` | Discovery → Technical Design | Inspects repo, specifies requirements, designs architecture & grounded Mermaid diagrams without modifying code. |
+| `/sdlc build <feature>` | Implementation → Verification | Checks Definition of Ready, implements increment, adds tests, verifies against Done checklist. |
+| `/sdlc audit [target]` | Audit / Governance | Inspects existing code, architecture, or documentation. Produces prioritized findings with evidence. |
+| `/sdlc gate ready` | Quality Gate | Audits pending task/backlog item against the **Definition of Ready** checklist. |
+| `/sdlc gate done` | Quality Gate | Audits changes against the **Definition of Done** checklist, tests, and anti-slop rules. |
+| `/sdlc adr <title>` | Architecture | Scaffolds a new Architecture Decision Record in `docs/adr/`. |
+| `/sdlc diagram <type>` | UML / Mermaid | Generates a grounded Mermaid diagram (`use-case`, `activity`, `sequence`, `domain`, `component`, `deployment`). |
+| `/sdlc antislop [scope]` | Anti-slop Gate | Audits UI, copy, accessibility contrast, responsive layouts, or code comments. |
+| `/sdlc threat-model` | Security Gate | Performs STRIDE and AI/LLM safety threat analysis for high-risk changes. |
 
 ## Antislop reference
 

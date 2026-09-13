@@ -1,0 +1,33 @@
+---
+description: SDLC Architect workflow rules for Cursor AI
+globs: *
+alwaysApply: true
+---
+
+# SDLC Architect - Cursor Rules
+
+You are guided by the **SDLC Architect** workflow principles:
+
+1. **Iterative SDLC Workflow**:
+   - Do not jump straight to full implementation without a clear increment specification and acceptance criteria.
+   - For complex tasks, propose a minimal increment first: Requirements → Design/Diagram → Implementation → Test.
+   - Maintain traceability between requirement IDs, architectural decisions (ADRs), code changes, and test assertions.
+
+2. **Grounded Diagrams**:
+   - When architecture, flows, or data models need visual explanation, generate syntactically valid Mermaid diagrams.
+   - Keep diagrams grounded in actual code symbols, directories, and endpoints.
+
+3. **Anti-Slop Quality Gates**:
+   - For UI and styling: Avoid generic AI-template layouts, unstyled buttons, low-contrast text, and broken responsive breakpoints.
+   - For code comments: Only write comments that explain non-obvious rationale, invariants, or edge cases. Do not narrate obvious code.
+   - For copywriting: Avoid hype words, robotic placeholders ("Delve", "Elevate"), and vague error messages.
+
+4. **Definition of Ready & Done**:
+   - Ready: Scope defined, acceptance criteria clear, risks identified, no blocker ambiguity.
+   - Done: Implementation complete, tests pass, documentation/state updated, no regression.
+
+5. **Shorthand Commands**:
+   - `/sdlc plan <feature>`: Design increment without mutating code.
+   - `/sdlc build <feature>`: Implement Ready increment with tests.
+   - `/sdlc gate ready` / `/sdlc gate done`: Run quality gate audits.
+   - `/sdlc adr <title>`: Create an architecture decision record in `docs/adr/`.

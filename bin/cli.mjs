@@ -14,35 +14,47 @@ const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), '
 
 const args = process.argv.slice(2);
 
+const MERMAID_DECLARATIONS = /^(flowchart\b|graph\b|sequenceDiagram\b|classDiagram\b|stateDiagram(?:-v2)?\b|erDiagram\b|journey\b|gantt\b|pie\b|mindmap\b|timeline\b|gitGraph\b|C4(?:Context|Container|Component|Dynamic|Deployment)\b|quadrantChart\b|requirementDiagram\b|sankey-beta\b|block-beta\b|packet-beta\b|architecture-beta\b|xychart-beta\b)/;
+
 function printHelp() {
   console.log(`
-SDLC Architect CLI (${pkg.version})
+\x1b[1mSDLC Architect CLI\x1b[0m (v${pkg.version})
 Iterative software delivery with grounded UML and anti-slop quality gates.
 
-Usage:
+\x1b[1mUsage:\x1b[0m
   npx sdlc-architect [command] [options]
 
-Commands:
-  install [target-dir]   Install skill(s) to target directory (default command)
-  list                   List bundled skills available to install
-  help                   Show this help message
-  version                Show CLI version
+\x1b[1mCommands:\x1b[0m
+  \x1b[36minstall [target-dir]\x1b[0m   Install skill(s) to target directory (default: ./skills)
+  \x1b[36minit [options]\x1b[0m         Scaffold full SDLC setup (skills, adapters, project-state, ADRs)
+  \x1b[36madapter <platform>\x1b[0m     Generate agent rules (cursor, claude, copilot, windsurf, all)
+  \x1b[36madr <title>\x1b[0m            Scaffold a new numbered Architecture Decision Record
+  \x1b[36mcheck-mermaid [path]\x1b[0m   Validate Mermaid diagram fences in Markdown files
+  \x1b[36mdoctor, check\x1b[0m          Run complete SDLC repository health check
+  \x1b[36mlist\x1b[0m                   List bundled skills available to install
+  \x1b[36mversion\x1b[0m                Show CLI version
+  \x1b[36mhelp\x1b[0m                   Show this help message
 
-Options:
-  -d, --dest <path>      Destination directory (default: ./skills)
+\x1b[1mOptions:\x1b[0m
+  -d, --dest <path>      Destination directory for skills (default: ./skills)
   -a, --all              Install sdlc-architect and all antislop concern skills
+  -p, --platform <name>  Agent platform adapter (cursor, claude, copilot, windsurf, all)
   -s, --skill <name>     Install specific skill (default: sdlc-architect)
   -t, --templates        Also copy artifact templates (templates/project-state.md)
-  -f, --force            Overwrite existing files if destination already exists
+  --state                Generate initial docs/project-state.md during init
+  --adr                  Initialize docs/adr/ directory with ADR-0001
+  -f, --force            Overwrite existing files without prompting
   -h, --help             Show help
   -v, --version          Show version
 
-Examples:
+\x1b[1mExamples:\x1b[0m
   npx sdlc-architect
   npx sdlc-architect --all
-  npx sdlc-architect install .agents/skills --all
-  npx sdlc-architect install .claude/skills
-  npx sdlc-architect --skill antislop-ui --dest ./skills
+  npx sdlc-architect init --all --platform cursor --state --adr
+  npx sdlc-architect adapter claude
+  npx sdlc-architect adr "use-postgresql-for-audit-log"
+  npx sdlc-architect check-mermaid ./docs
+  npx sdlc-architect doctor
 `);
 }
 
@@ -71,69 +83,6 @@ function listSkills() {
     }
   }
   console.log('');
-}
-
-function parseArgs() {
-  const options = {
-    command: 'install',
-    dest: './skills',
-    all: false,
-    skill: 'sdlc-architect',
-    templates: false,
-    force: false,
-  };
-
-  const positional = [];
-
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-
-    if (arg === '-h' || arg === '--help' || arg === 'help') {
-      options.command = 'help';
-      return options;
-    }
-    if (arg === '-v' || arg === '--version' || arg === 'version') {
-      options.command = 'version';
-      return options;
-    }
-    if (arg === 'list' || arg === '--list') {
-      options.command = 'list';
-      return options;
-    }
-    if (arg === 'install' || arg === 'init') {
-      options.command = 'install';
-      continue;
-    }
-    if (arg === '-a' || arg === '--all') {
-      options.all = true;
-      continue;
-    }
-    if (arg === '-f' || arg === '--force') {
-      options.force = true;
-      continue;
-    }
-    if (arg === '-t' || arg === '--templates') {
-      options.templates = true;
-      continue;
-    }
-    if ((arg === '-d' || arg === '--dest') && i + 1 < args.length) {
-      options.dest = args[++i];
-      continue;
-    }
-    if ((arg === '-s' || arg === '--skill') && i + 1 < args.length) {
-      options.skill = args[++i];
-      continue;
-    }
-    if (!arg.startsWith('-')) {
-      positional.push(arg);
-    }
-  }
-
-  if (positional.length > 0) {
-    options.dest = positional[0];
-  }
-
-  return options;
 }
 
 function copyDir(src, dest, force) {
@@ -197,6 +146,368 @@ function runInstall(options) {
   console.log('  3. In your prompt, trigger the SDLC architect workflow for your project lifecycle.\n');
 }
 
+function runAdapter(platform, force) {
+  const validPlatforms = ['cursor', 'claude', 'copilot', 'windsurf', 'all'];
+  const p = (platform || 'all').toLowerCase();
+
+  if (!validPlatforms.includes(p)) {
+    console.error(`\x1b[31mError:\x1b[0m Unknown platform "${platform}". Valid: ${validPlatforms.join(', ')}`);
+    process.exit(1);
+  }
+
+  const platformsToApply = p === 'all' ? ['cursor', 'claude', 'copilot', 'windsurf'] : [p];
+  console.log(`\n\x1b[1mGenerating Agent Adapters\x1b[0m...\n`);
+
+  for (const item of platformsToApply) {
+    let destRelative = '';
+    let srcFile = '';
+
+    if (item === 'cursor') {
+      destRelative = '.cursor/rules/sdlc-architect.mdc';
+      srcFile = path.join(packageRoot, 'templates/adapters/cursor.mdc');
+    } else if (item === 'claude') {
+      destRelative = 'CLAUDE.md';
+      srcFile = path.join(packageRoot, 'templates/adapters/claude.md');
+    } else if (item === 'copilot') {
+      destRelative = '.github/copilot-instructions.md';
+      srcFile = path.join(packageRoot, 'templates/adapters/copilot.md');
+    } else if (item === 'windsurf') {
+      destRelative = '.windsurfrules';
+      srcFile = path.join(packageRoot, 'templates/adapters/windsurf.md');
+    }
+
+    const destPath = path.resolve(cwd, destRelative);
+
+    if (fs.existsSync(destPath) && !force) {
+      console.log(`  \x1b[33m!\x1b[0m Skipped \x1b[1m${item}\x1b[0m (${destRelative} already exists, use --force to overwrite)`);
+      continue;
+    }
+
+    try {
+      fs.mkdirSync(path.dirname(destPath), { recursive: true });
+      fs.copyFileSync(srcFile, destPath);
+      console.log(`  \x1b[32m✔\x1b[0m Generated \x1b[1m${item}\x1b[0m adapter -> ${destRelative}`);
+    } catch (err) {
+      console.error(`  \x1b[31m✖\x1b[0m Failed generating ${item} adapter: ${err.message}`);
+    }
+  }
+  console.log('');
+}
+
+function runAdr(title) {
+  if (!title || !title.trim()) {
+    console.error('\x1b[31mError:\x1b[0m ADR title is required. Example: npx sdlc-architect adr "use-postgresql"');
+    process.exit(1);
+  }
+
+  const adrDir = path.resolve(cwd, 'docs/adr');
+  fs.mkdirSync(adrDir, { recursive: true });
+
+  // Scan existing ADR files to determine next index
+  const files = fs.readdirSync(adrDir);
+  let maxIndex = 0;
+  for (const file of files) {
+    const match = file.match(/^(\d{4})-/);
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > maxIndex) maxIndex = num;
+    }
+  }
+
+  const nextIndex = String(maxIndex + 1).padStart(4, '0');
+  const slug = title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const fileName = `${nextIndex}-${slug}.md`;
+  const destPath = path.join(adrDir, fileName);
+
+  const templatePath = path.join(packageRoot, 'templates/adr-template.md');
+  let content = fs.readFileSync(templatePath, 'utf8');
+
+  const today = new Date().toISOString().split('T')[0];
+  content = content
+    .replace(/\{NUMBER\}/g, nextIndex)
+    .replace(/\{TITLE\}/g, title.trim())
+    .replace(/\{YYYY-MM-DD\}/g, today);
+
+  fs.writeFileSync(destPath, content, 'utf8');
+  console.log(`\n\x1b[32m✔\x1b[0m Created ADR \x1b[1m${nextIndex}\x1b[0m -> docs/adr/${fileName}\n`);
+}
+
+function checkMermaidInPath(targetPath) {
+  const scanTarget = path.resolve(cwd, targetPath || '.');
+  const mdFiles = [];
+  const errors = [];
+
+  function walk(directory) {
+    if (!fs.existsSync(directory)) return;
+    const stat = fs.statSync(directory);
+    if (stat.isFile() && directory.endsWith('.md')) {
+      mdFiles.push(directory);
+      return;
+    }
+    if (!stat.isDirectory()) return;
+
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === 'dist') continue;
+      const full = path.join(directory, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile() && full.endsWith('.md')) mdFiles.push(full);
+    }
+  }
+
+  walk(scanTarget);
+
+  for (const file of mdFiles) {
+    const rel = path.relative(cwd, file);
+    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    let inside = false;
+    let startLine = 0;
+    let body = [];
+
+    lines.forEach((line, index) => {
+      const lineNum = index + 1;
+      if (/^\s*```mermaid\s*$/.test(line)) {
+        if (inside) errors.push(`${rel}:${lineNum}: Nested Mermaid fence detected`);
+        inside = true;
+        startLine = lineNum;
+        body = [];
+        return;
+      }
+
+      if (inside && /^\s*```\s*$/.test(line)) {
+        const first = body.find(item => item.trim())?.trim() ?? '';
+        if (!first) {
+          errors.push(`${rel}:${startLine}: Mermaid block is empty`);
+        } else if (!MERMAID_DECLARATIONS.test(first)) {
+          errors.push(`${rel}:${startLine}: Unknown Mermaid declaration: "${first}"`);
+        }
+        inside = false;
+        body = [];
+        return;
+      }
+
+      if (inside) body.push(line);
+    });
+
+    if (inside) {
+      errors.push(`${rel}:${startLine}: Mermaid fence was opened but never closed`);
+    }
+  }
+
+  console.log(`\n\x1b[1mMermaid Diagram Validation\x1b[0m`);
+  console.log(`Scanned ${mdFiles.length} Markdown file(s) in \x1b[36m${path.relative(cwd, scanTarget) || '.'}\x1b[0m\n`);
+
+  if (errors.length > 0) {
+    console.error(errors.map(err => `  \x1b[31m✖\x1b[0m ${err}`).join('\n'));
+    console.log(`\n\x1b[31mFAIL:\x1b[0m Found ${errors.length} Mermaid diagram error(s).\n`);
+    return false;
+  }
+
+  console.log(`  \x1b[32m✔\x1b[0m All Mermaid fences and declarations are structurally valid!\n`);
+  return true;
+}
+
+function runDoctor() {
+  console.log(`\n\x1b[1mRunning SDLC Architect Doctor\x1b[0m (v${pkg.version})...\n`);
+  let issues = 0;
+
+  // 1. Check skill installation
+  const skillPaths = [
+    'skills/sdlc-architect',
+    '.agents/skills/sdlc-architect',
+    '.claude/skills/sdlc-architect',
+  ];
+  const foundSkill = skillPaths.find(p => fs.existsSync(path.resolve(cwd, p, 'SKILL.md')));
+  if (foundSkill) {
+    console.log(`  \x1b[32m✔\x1b[0m SDLC Architect Skill detected at: \x1b[1m${foundSkill}\x1b[0m`);
+  } else {
+    console.log(`  \x1b[33m!\x1b[0m No local SDLC Architect skill found in skills/ (run: npx sdlc-architect install)`);
+  }
+
+  // 2. Check Project State
+  const statePath = path.resolve(cwd, 'docs/project-state.md');
+  const altStatePath = path.resolve(cwd, 'templates/project-state.md');
+  if (fs.existsSync(statePath)) {
+    console.log(`  \x1b[32m✔\x1b[0m Project state file found at: \x1b[1mdocs/project-state.md\x1b[0m`);
+  } else if (fs.existsSync(altStatePath)) {
+    console.log(`  \x1b[32m✔\x1b[0m Project state template found at: \x1b[1mtemplates/project-state.md\x1b[0m`);
+  } else {
+    console.log(`  \x1b[33m!\x1b[0m No docs/project-state.md found (run: npx sdlc-architect init --state)`);
+  }
+
+  // 3. Check ADR Directory
+  const adrDir = path.resolve(cwd, 'docs/adr');
+  if (fs.existsSync(adrDir)) {
+    const count = fs.readdirSync(adrDir).filter(f => f.endsWith('.md')).length;
+    console.log(`  \x1b[32m✔\x1b[0m ADR directory detected with \x1b[1m${count}\x1b[0m record(s)`);
+  } else {
+    console.log(`  \x1b[33m!\x1b[0m No docs/adr/ directory found (run: npx sdlc-architect adr <title>)`);
+  }
+
+  // 4. Validate Mermaid in current repo
+  console.log(`\n  Checking Mermaid syntax across repository...`);
+  const mermaidOk = checkMermaidInPath('.');
+  if (!mermaidOk) issues++;
+
+  if (issues === 0) {
+    console.log(`\x1b[32m✔ Doctor check passed without critical issues!\x1b[0m\n`);
+  } else {
+    console.log(`\x1b[31m✖ Doctor found ${issues} issue(s) that need attention.\x1b[0m\n`);
+    process.exit(1);
+  }
+}
+
+function runInit(options) {
+  console.log(`\n\x1b[1mInitializing SDLC Architect Environment\x1b[0m\n`);
+
+  // 1. Install skills
+  runInstall(options);
+
+  // 2. Generate platform adapters if requested
+  if (options.platform) {
+    runAdapter(options.platform, options.force);
+  }
+
+  // 3. Generate project state if requested
+  if (options.state) {
+    const docsDir = path.resolve(cwd, 'docs');
+    const destState = path.join(docsDir, 'project-state.md');
+    const srcState = path.join(packageRoot, 'templates/project-state.md');
+
+    if (!fs.existsSync(destState) || options.force) {
+      fs.mkdirSync(docsDir, { recursive: true });
+      fs.copyFileSync(srcState, destState);
+      console.log(`  \x1b[32m✔\x1b[0m Initialized project state -> docs/project-state.md`);
+    } else {
+      console.log(`  \x1b[33m!\x1b[0m docs/project-state.md already exists (skipped)`);
+    }
+  }
+
+  // 4. Initialize ADR if requested
+  if (options.adr) {
+    const adrDir = path.resolve(cwd, 'docs/adr');
+    const adr0001 = path.join(adrDir, '0001-record-architecture-decisions.md');
+    const src0001 = path.join(packageRoot, 'templates/adr/0001-record-architecture-decisions.md');
+
+    if (!fs.existsSync(adr0001) || options.force) {
+      fs.mkdirSync(adrDir, { recursive: true });
+      fs.copyFileSync(src0001, adr0001);
+      console.log(`  \x1b[32m✔\x1b[0m Initialized ADR directory -> docs/adr/0001-record-architecture-decisions.md`);
+    } else {
+      console.log(`  \x1b[33m!\x1b[0m docs/adr/0001 already exists (skipped)`);
+    }
+  }
+
+  console.log('\n\x1b[32mInitialization complete!\x1b[0m Your repository is ready for traceable SDLC workflows.\n');
+}
+
+function parseArgs() {
+  const options = {
+    command: 'install',
+    dest: './skills',
+    all: false,
+    skill: 'sdlc-architect',
+    templates: false,
+    force: false,
+    platform: null,
+    state: false,
+    adr: false,
+    param: null,
+  };
+
+  const positional = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+
+    if (arg === '-h' || arg === '--help' || arg === 'help') {
+      options.command = 'help';
+      return options;
+    }
+    if (arg === '-v' || arg === '--version' || arg === 'version') {
+      options.command = 'version';
+      return options;
+    }
+    if (arg === 'list' || arg === '--list') {
+      options.command = 'list';
+      return options;
+    }
+    if (arg === 'doctor' || arg === 'check') {
+      options.command = 'doctor';
+      return options;
+    }
+    if (arg === 'check-mermaid') {
+      options.command = 'check-mermaid';
+      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+        options.param = args[++i];
+      }
+      return options;
+    }
+    if (arg === 'adr') {
+      options.command = 'adr';
+      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+        options.param = args[++i];
+      }
+      return options;
+    }
+    if (arg === 'adapter') {
+      options.command = 'adapter';
+      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+        options.platform = args[++i];
+      }
+      return options;
+    }
+    if (arg === 'init') {
+      options.command = 'init';
+      continue;
+    }
+    if (arg === 'install') {
+      options.command = 'install';
+      continue;
+    }
+    if (arg === '-a' || arg === '--all') {
+      options.all = true;
+      continue;
+    }
+    if (arg === '-f' || arg === '--force') {
+      options.force = true;
+      continue;
+    }
+    if (arg === '-t' || arg === '--templates') {
+      options.templates = true;
+      continue;
+    }
+    if (arg === '--state') {
+      options.state = true;
+      continue;
+    }
+    if (arg === '--adr') {
+      options.adr = true;
+      continue;
+    }
+    if ((arg === '-d' || arg === '--dest') && i + 1 < args.length) {
+      options.dest = args[++i];
+      continue;
+    }
+    if ((arg === '-p' || arg === '--platform') && i + 1 < args.length) {
+      options.platform = args[++i];
+      continue;
+    }
+    if ((arg === '-s' || arg === '--skill') && i + 1 < args.length) {
+      options.skill = args[++i];
+      continue;
+    }
+    if (!arg.startsWith('-')) {
+      positional.push(arg);
+    }
+  }
+
+  if (positional.length > 0 && options.command === 'install') {
+    options.dest = positional[0];
+  }
+
+  return options;
+}
+
 function main() {
   const options = parseArgs();
 
@@ -209,6 +520,21 @@ function main() {
       break;
     case 'list':
       listSkills();
+      break;
+    case 'adapter':
+      runAdapter(options.platform || 'all', options.force);
+      break;
+    case 'adr':
+      runAdr(options.param);
+      break;
+    case 'check-mermaid':
+      checkMermaidInPath(options.param);
+      break;
+    case 'doctor':
+      runDoctor();
+      break;
+    case 'init':
+      runInit(options);
       break;
     case 'install':
       runInstall(options);

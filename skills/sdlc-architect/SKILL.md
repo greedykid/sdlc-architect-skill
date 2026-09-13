@@ -52,6 +52,22 @@ Choose one mode from the request and state it in the context snapshot:
 
 Do not silently continue from Plan into Build. If the user asks to “build” without enough information for a Ready increment, identify the missing decision and ask before mutating the project.
 
+## Slash commands and triggers
+
+Recognize and execute these shorthand commands directly when issued by the user:
+
+| Command | Phase / Mode | Agent Action |
+|---|---|---|
+| `/sdlc plan <feature>` | Discovery → Technical Design (Plan) | Explore context, specify requirements, design architecture, produce grounded diagrams, and outline Ready tasks without modifying application code. |
+| `/sdlc build <feature>` | Implementation → Verification (Build) | Verify Definition of Ready, implement the increment, run proportionate tests, and report completion against the Done checklist. |
+| `/sdlc audit [target]` | Verification / Governance (Audit) | Inspect existing code, architecture, or documentation. Produce prioritized findings with evidence without making unauthorized edits. |
+| `/sdlc gate ready` | Quality Gate | Audit the pending backlog item against the Definition of Ready checklist in `references/quality-gates.md`. State whether it is Ready to build. |
+| `/sdlc gate done` | Quality Gate | Audit the current branch/changes against the Definition of Done checklist, test coverage, traceability, and anti-slop rules. |
+| `/sdlc adr <title>` | Architecture | Scaffold a new numbered Architecture Decision Record in `docs/adr/` capturing context, decision, consequences, and compliance tags. |
+| `/sdlc diagram <type>` | Architecture / Design | Generate a grounded Mermaid diagram (`use-case`, `activity`, `sequence`, `domain`, `component`, `deployment`) matching real requirements or code. |
+| `/sdlc antislop [scope]` | Anti-slop Gate | Inspect UI, copy, accessibility contrast, responsive layouts, or code comments against the vendored antislop rules. |
+| `/sdlc threat-model` | Security Gate | Perform a STRIDE and AI safety threat model for high-risk changes per `references/security-threat-model.md`. |
+
 ## Artifact and diagram routing
 
 Read [references/sdlc-workflow.md](references/sdlc-workflow.md) when planning a lifecycle, defining artifacts, establishing gates, or handling an existing project with incomplete requirements.
