@@ -2,6 +2,14 @@
 
 All notable changes to this skill are documented here. Each released version uses the matching Git tag `vX.Y.Z` and GitHub Release.
 
+## [0.6.4] - 2026-09-13
+
+### Added
+
+- Added `update` and `upgrade` command to CLI (`npx sdlc-architect update`) to upgrade installed skills in a project to the latest package version.
+- Automatic detection of installed skills directory (`./skills`, `.agents/skills`, `.claude/skills`, or custom path).
+- Support for updating project templates and refreshing agent platform adapters via `--adapters` flag during update.
+
 ## [0.6.3] - 2026-09-13
 
 ### Added

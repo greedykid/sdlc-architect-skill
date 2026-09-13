@@ -26,8 +26,9 @@ Iterative software delivery with grounded UML and anti-slop quality gates.
 
 \x1b[1mCommands:\x1b[0m
   \x1b[36minstall [target-dir]\x1b[0m   Install skill(s) to target directory (default: ./skills)
+  \x1b[36mupdate, upgrade [dir]\x1b[0m  Update installed skill(s) to the latest package version
   \x1b[36minit [options]\x1b[0m         Scaffold full SDLC setup (skills, adapters, project-state, ADRs)
-  \x1b[36madapter <platform>\x1b[0m     Generate agent rules (cursor, claude, copilot, windsurf, all)
+  \x1b[36madapter <platform>\x1b[0m     Generate agent rules (cursor, claude, copilot, windsurf, github, all)
   \x1b[36madr <title>\x1b[0m            Scaffold a new numbered Architecture Decision Record
   \x1b[36mcheck-mermaid [path]\x1b[0m   Validate Mermaid diagram fences in Markdown files
   \x1b[36mdoctor, check\x1b[0m          Run complete SDLC repository health check
@@ -37,10 +38,11 @@ Iterative software delivery with grounded UML and anti-slop quality gates.
 
 \x1b[1mOptions:\x1b[0m
   -d, --dest <path>      Destination directory for skills (default: ./skills)
-  -a, --all              Install sdlc-architect and all antislop concern skills
-  -p, --platform <name>  Agent platform adapter (cursor, claude, copilot, windsurf, all)
-  -s, --skill <name>     Install specific skill (default: sdlc-architect)
-  -t, --templates        Also copy artifact templates (templates/project-state.md)
+  -a, --all              Install/update sdlc-architect and all antislop concern skills
+  -p, --platform <name>  Agent platform adapter (cursor, claude, copilot, windsurf, github, all)
+  -s, --skill <name>     Target specific skill (default: sdlc-architect)
+  -t, --templates        Also copy/update artifact templates (templates/project-state.md)
+  --adapters             Also update agent platform adapters during update
   --state                Generate initial docs/project-state.md during init
   --adr                  Initialize docs/adr/ directory with ADR-0001
   --github               Initialize .github/ pull request and issue templates
@@ -145,6 +147,92 @@ function runInstall(options) {
   console.log(`  1. Review the skill documentation at \x1b[34m${path.join(options.dest, 'sdlc-architect', 'SKILL.md')}\x1b[0m`);
   console.log('  2. Configure your AI agent workspace (Codex, Claude Code, Cursor, etc.) to include the skills path.');
   console.log('  3. In your prompt, trigger the SDLC architect workflow for your project lifecycle.\n');
+}
+
+function runUpdate(options) {
+  const available = getAvailableSkills();
+  console.log(`\n\x1b[1mSDLC Architect Skill Updater\x1b[0m (v${pkg.version})`);
+
+  // Detect destination directory
+  let targetBase = null;
+  const candidateDirs = [
+    options.dest,
+    './skills',
+    './.agents/skills',
+    './.claude/skills',
+  ];
+
+  if (options.dest && options.dest !== './skills') {
+    targetBase = path.resolve(cwd, options.dest);
+  } else {
+    for (const cand of candidateDirs) {
+      if (!cand) continue;
+      const fullPath = path.resolve(cwd, cand);
+      if (fs.existsSync(path.join(fullPath, 'sdlc-architect', 'SKILL.md'))) {
+        targetBase = fullPath;
+        break;
+      }
+    }
+    if (!targetBase) {
+      targetBase = path.resolve(cwd, options.dest || './skills');
+    }
+  }
+
+  console.log(`Target directory: \x1b[36m${targetBase}\x1b[0m\n`);
+
+  // Determine which skills to update
+  let skillsToUpdate = [];
+  if (options.all) {
+    skillsToUpdate = available;
+  } else if (options.skill && options.skill !== 'sdlc-architect') {
+    skillsToUpdate = [options.skill];
+  } else {
+    // Auto-detect which skills currently exist in targetBase
+    skillsToUpdate = available.filter(skill => {
+      const skillPath = path.join(targetBase, skill);
+      return fs.existsSync(skillPath);
+    });
+
+    if (skillsToUpdate.length === 0) {
+      console.log(`  \x1b[33m!\x1b[0m No existing skills found in ${targetBase}. Installing \x1b[1msdlc-architect\x1b[0m...`);
+      skillsToUpdate = ['sdlc-architect'];
+    }
+  }
+
+  let updatedCount = 0;
+  for (const skill of skillsToUpdate) {
+    const src = path.join(packageRoot, 'skills', skill);
+    const dest = path.join(targetBase, skill);
+
+    try {
+      copyDir(src, dest, true); // force overwrite
+      console.log(`  \x1b[32m✔\x1b[0m Updated \x1b[1m${skill}\x1b[0m -> ${path.relative(cwd, dest)}`);
+      updatedCount++;
+    } catch (err) {
+      console.error(`  \x1b[31m✖\x1b[0m Failed to update ${skill}: ${err.message}`);
+    }
+  }
+
+  // If templates exist in current project, update them
+  const templatesDest = path.resolve(cwd, 'templates');
+  const templatesSrc = path.join(packageRoot, 'templates');
+  if (options.templates || fs.existsSync(templatesDest)) {
+    if (path.resolve(templatesSrc) !== path.resolve(templatesDest)) {
+      try {
+        fs.cpSync(templatesSrc, templatesDest, { recursive: true, force: true });
+        console.log(`  \x1b[32m✔\x1b[0m Updated templates -> ${path.relative(cwd, templatesDest)}`);
+      } catch (err) {
+        console.warn(`  \x1b[33m!\x1b[0m Skipping templates update: ${err.message}`);
+      }
+    }
+  }
+
+  // Update adapters if requested
+  if (options.adapters) {
+    runAdapter('all', true);
+  }
+
+  console.log(`\n\x1b[32mSuccessfully updated ${updatedCount} skill(s) to v${pkg.version}!\x1b[0m\n`);
 }
 
 function runAdapter(platform, force) {
@@ -494,6 +582,14 @@ function parseArgs() {
       options.command = 'install';
       continue;
     }
+    if (arg === 'update' || arg === 'upgrade') {
+      options.command = 'update';
+      continue;
+    }
+    if (arg === '--adapters') {
+      options.adapters = true;
+      continue;
+    }
     if (arg === '-a' || arg === '--all') {
       options.all = true;
       continue;
@@ -535,7 +631,7 @@ function parseArgs() {
     }
   }
 
-  if (positional.length > 0 && options.command === 'install') {
+  if (positional.length > 0 && (options.command === 'install' || options.command === 'update')) {
     options.dest = positional[0];
   }
 
@@ -572,6 +668,9 @@ function main() {
       break;
     case 'install':
       runInstall(options);
+      break;
+    case 'update':
+      runUpdate(options);
       break;
     default:
       printHelp();

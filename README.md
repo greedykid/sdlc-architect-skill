@@ -69,6 +69,10 @@ npx sdlc-architect check-mermaid ./docs
 
 # 6. Run repository health check
 npx sdlc-architect doctor
+
+# 7. Update installed skills to the latest package version
+npx sdlc-architect update
+npx sdlc-architect update --adapters   # also refresh agent rules
 ```
 
 ### CLI Reference
@@ -76,6 +80,7 @@ npx sdlc-architect doctor
 | Command / Option | Alias | Description |
 |---|---|---|
 | `install [dir]` | | Install skill(s) to destination directory (default: `./skills`) |
+| `update, upgrade [dir]` | | Update installed skill(s) to latest package version |
 | `init [options]` | | Full initialization: copies skills, configures agent rules, state, and ADRs |
 | `adapter <platform>` | | Generate agent adapter (`cursor`, `claude`, `copilot`, `windsurf`, `github`, `all`) |
 | `adr <title>` | | Scaffold a numbered ADR in `docs/adr/000X-<slug>.md` |
@@ -83,9 +88,10 @@ npx sdlc-architect doctor
 | `doctor`, `check` | | Health check: validates skills, project state, ADRs, and Mermaid diagrams |
 | `list` | | List bundled skills and descriptions |
 | `--dest <path>` | `-d` | Destination directory for skills |
-| `--all` | `-a` | Install `sdlc-architect` and all bundled antislop concern skills |
-| `--skill <name>` | `-s` | Install a specific skill (e.g. `antislop-ui`) |
+| `--all` | `-a` | Install/update `sdlc-architect` and all bundled antislop concern skills |
+| `--skill <name>` | `-s` | Install or update a specific skill (e.g. `antislop-ui`) |
 | `--platform <name>` | `-p` | Specify agent platform adapter (`cursor`, `claude`, `copilot`, `windsurf`, `github`, `all`) |
+| `--adapters` | | Also update agent platform adapters during `update` |
 | `--state` | | Generate initial `docs/project-state.md` |
 | `--adr` | | Initialize `docs/adr/` with `0001-record-architecture-decisions.md` |
 | `--github` | | Initialize `.github/` with pull request and issue templates |
