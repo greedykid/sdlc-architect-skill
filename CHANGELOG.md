@@ -2,6 +2,13 @@
 
 All notable changes to this skill are documented here. Each released version uses the matching Git tag `vX.Y.Z` and GitHub Release.
 
+## [0.6.2] - 2026-09-13
+
+### Changed
+
+- Updated GitHub release workflow to support resilient release creation/editing and Node 22 runtime.
+- Automated NPM publishing via GitHub Actions with configured `NPM_TOKEN`.
+
 ## [0.6.1] - 2026-09-13
 
 ### Added
