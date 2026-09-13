@@ -1,20 +1,20 @@
 # Antislop Integration Reference
 
-This reference combines the SDLC workflow with the antislop filter. Use it for interface work, user-facing copy, responsive behavior, accessibility, visual assets, or code comments. It does not impose a visual style and does not override explicit product requirements.
+This reference combines the SDLC workflow with the vendored antislop skill set. Use it for interface work, user-facing copy, responsive behavior, accessibility, visual assets, or code comments. It does not impose a visual style and does not override explicit product requirements.
 
 ## Scope and routing
 
 Apply antislop only where it improves the requested work:
 
-| Work involved | Load with the core when available |
+| Work involved | Load from this package |
 | --- | --- |
-| Any UI or visual treatment | `antislop` and `antislop-ui` |
-| User-facing copy, headlines, labels, or CTAs | `antislop` and `antislop-copywriting` |
-| Contrast, keyboard, focus, or UI states | `antislop` and `antislop-human` |
-| Responsive or mobile layout | `antislop` and `antislop-layoutmobile` |
-| Code comments | `antislop` and `antislop-code` |
+| Any UI or visual treatment | `skills/antislop/SKILL.md` and `skills/antislop-ui/SKILL.md` |
+| User-facing copy, headlines, labels, or CTAs | `skills/antislop/SKILL.md` and `skills/antislop-copywriting/SKILL.md` |
+| Contrast, keyboard, focus, or UI states | `skills/antislop/SKILL.md` and `skills/antislop-human/SKILL.md` |
+| Responsive or mobile layout | `skills/antislop/SKILL.md` and `skills/antislop-layoutmobile/SKILL.md` |
+| Code comments | `skills/antislop/SKILL.md` and `skills/antislop-code/SKILL.md` |
 
-Resolve these skills from the active Codex skill environment. Do not download or silently install missing skills. If an optional skill is unavailable, apply the relevant rules in this reference and state the limitation when it affects confidence.
+This repository includes the core and all five concern skills. The root `antislop.md` is the standalone core entry used by the vendored concern skills. When `sdlc-architect` is copied into another skills directory without the rest of this repository, resolve the same skills from the active Codex environment instead. Do not download or silently install missing skills. If a concern skill is unavailable, apply the relevant rules in this reference and state the limitation when it affects confidence.
 
 Do not apply UI-specific rules to backend-only work, domain documentation, or Mermaid diagrams unless the requested artifact itself contains user-facing interface content.
 
@@ -92,4 +92,4 @@ Use `PASS` only with evidence. Use `FAIL` when a hard gate is violated or eviden
 
 ## Code-comment boundary
 
-When `antislop-code` is loaded, modify comments only. Remove decorative separators, obvious narration, vague TODOs, signature echoes, and empty labels, while preserving comments that explain business rules, edge cases, algorithms, limitations, side effects, or security implications. Never use a comment cleanup request as permission to change executable code.
+When `skills/antislop-code/SKILL.md` is loaded, modify comments only. Remove decorative separators, obvious narration, vague TODOs, signature echoes, and empty labels, while preserving comments that explain business rules, edge cases, algorithms, limitations, side effects, or security implications. Never use a comment cleanup request as permission to change executable code.

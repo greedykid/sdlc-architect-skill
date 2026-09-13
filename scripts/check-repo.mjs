@@ -5,9 +5,18 @@ import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const requiredFiles = [
+  'antislop.md',
   'plugin.json',
   '.codex-plugin/plugin.json',
   '.agents/plugins/marketplace.json',
+  'skills/antislop/SKILL.md',
+  'skills/antislop-ui/SKILL.md',
+  'skills/antislop-copywriting/SKILL.md',
+  'skills/antislop-human/SKILL.md',
+  'skills/antislop-human/contrast-check.py',
+  'skills/antislop-human/contrast-mcp.py',
+  'skills/antislop-layoutmobile/SKILL.md',
+  'skills/antislop-code/SKILL.md',
   'skills/sdlc-architect/SKILL.md',
   'skills/sdlc-architect/agents/openai.yaml',
   'skills/sdlc-architect/references/antislop-integration.md',
@@ -23,6 +32,7 @@ const requiredFiles = [
 const errors = []
 const exists = (file) => fs.existsSync(path.join(root, file))
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8')
+const skillFiles = requiredFiles.filter((file) => file.startsWith('skills/') && file.endsWith('/SKILL.md'))
 
 for (const file of requiredFiles) {
   if (!exists(file)) errors.push(`missing required file: ${file}`)
@@ -37,16 +47,25 @@ for (const file of ['plugin.json', '.codex-plugin/plugin.json', '.agents/plugins
   }
 }
 
+for (const skillFile of skillFiles) {
+  if (!exists(skillFile)) continue
+  const skill = read(skillFile)
+  const frontmatter = skill.split('---')[1] ?? ''
+  if (!/^name:\s*\S+/m.test(frontmatter)) errors.push(`${skillFile} has no name in frontmatter`)
+  if (!/^description:\s*\S+/m.test(frontmatter)) errors.push(`${skillFile} has no description in frontmatter`)
+  if (/\[TODO:|\[PLACEHOLDER\]/.test(skill)) errors.push(`${skillFile} contains an unfinished scaffold placeholder`)
+}
+
+if (exists('antislop.md') && exists('skills/antislop/SKILL.md') && read('antislop.md') !== read('skills/antislop/SKILL.md')) {
+  errors.push('antislop.md and skills/antislop/SKILL.md are out of sync')
+}
+
 if (exists('skills/sdlc-architect/SKILL.md')) {
   const skill = read('skills/sdlc-architect/SKILL.md')
-  const frontmatter = skill.split('---')[1] ?? ''
-  if (!/^name:\s*\S+/m.test(frontmatter)) errors.push('SKILL.md has no name in frontmatter')
-  if (!/^description:\s*\S+/m.test(frontmatter)) errors.push('SKILL.md has no description in frontmatter')
   for (const reference of skill.matchAll(/references\/([\w-]+\.md)/g)) {
     const file = `skills/sdlc-architect/references/${reference[1]}`
     if (!exists(file)) errors.push(`SKILL.md references missing file: ${file}`)
   }
-  if (/\[TODO:|\[PLACEHOLDER\]/.test(skill)) errors.push('SKILL.md contains an unfinished scaffold placeholder')
 }
 
 if (errors.length) {

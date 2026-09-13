@@ -10,11 +10,13 @@ skills/sdlc-architect/
 ├── agents/openai.yaml
 └── references/
     ├── antislop-integration.md
+    ├── artifact-templates.md
+    ├── quality-gates.md
     ├── sdlc-workflow.md
     └── uml-mermaid.md
 ```
 
-The root plugin manifests make the skill discoverable as a Codex plugin. The skill itself stays portable and can also be copied from `skills/sdlc-architect/` into an Agent Skills-compatible skills directory.
+The root plugin manifests make the skill discoverable as a Codex plugin. The antislop bundle is available beside it under `skills/antislop*`. `skills/antislop-human/` also includes the contrast checker and its MCP launcher. The SDLC skill can also be copied from `skills/sdlc-architect/` into an Agent Skills-compatible skills directory.
 
 ## What it covers
 
@@ -22,6 +24,7 @@ The root plugin manifests make the skill discoverable as a Codex plugin. The ski
 - Traceability between requirements, design decisions, implementation, and tests.
 - Use case, activity, sequence, class/domain, component, and deployment diagrams in Mermaid.
 - Anti-slop routing for UI, copy, accessibility, responsive layout, visual assets, and code comments.
+- Vendored antislop core plus UI, copywriting, human, mobile, and code-comment concern skills.
 - Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
 - Reusable artifact templates and behavioral forward-test scenarios.
 

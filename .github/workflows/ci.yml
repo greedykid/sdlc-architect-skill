@@ -22,3 +22,5 @@ jobs:
         run: node scripts/check-mermaid.mjs
       - name: Behavioral scenario catalog
         run: node scripts/check-scenarios.mjs
+      - name: Contrast checker self-test
+        run: python3 skills/antislop-human/contrast-check.py --selftest
