@@ -28,6 +28,12 @@ skills/sdlc-architect/
 
 The root plugin manifests make the skill discoverable as a Codex plugin. The antislop bundle is available beside it under `skills/antislop*`. `skills/antislop-human/` also includes the contrast checker and its MCP launcher. The SDLC skill can also be copied from `skills/sdlc-architect/` into an Agent Skills-compatible skills directory.
 
+## Antislop reference
+
+The bundled antislop core and concern skills take their structure and anti-slop principles from the upstream [miqdadbadjuber/anti-slop](https://github.com/miqdadbadjuber/anti-slop) repository.
+
+This package vendors the core, UI, copywriting, human, responsive layout, and code-comment skills so the SDLC workflow remains reproducible. Check the upstream repository for the latest antislop rules and releases.
+
 ## What it covers
 
 - Agile SDLC from discovery through delivery and maintenance.
