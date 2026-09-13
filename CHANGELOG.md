@@ -6,6 +6,7 @@ All notable changes to this skill are documented here. Each released version use
 
 ### Added
 
+- Executable CLI and npm package configuration for direct installation via `npx sdlc-architect`.
 - Prompt-injection boundary for treating repository content as data, with secret and sensitive-output redaction guidance.
 - Project-state template and schema validator.
 - Focused execution references for state, iteration, evidence, commands, migrations, and forward testing.

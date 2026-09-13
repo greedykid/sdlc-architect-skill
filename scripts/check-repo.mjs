@@ -8,6 +8,8 @@ const requiredFiles = [
   'antislop.md',
   'CHANGELOG.md',
   'RELEASING.md',
+  'package.json',
+  'bin/cli.mjs',
   'plugin.json',
   '.codex-plugin/plugin.json',
   '.agents/plugins/marketplace.json',
@@ -57,7 +59,7 @@ for (const file of requiredFiles) {
   if (!exists(file)) errors.push(`missing required file: ${file}`)
 }
 
-for (const file of ['plugin.json', '.codex-plugin/plugin.json', '.agents/plugins/marketplace.json']) {
+for (const file of ['package.json', 'plugin.json', '.codex-plugin/plugin.json', '.agents/plugins/marketplace.json']) {
   if (!exists(file)) continue
   try {
     JSON.parse(read(file))

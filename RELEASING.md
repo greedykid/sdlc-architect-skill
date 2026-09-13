@@ -4,7 +4,7 @@ Every version change must include a changelog entry, a matching semantic-version
 
 ## Release steps
 
-1. Update `.codex-plugin/plugin.json` with the new version.
+1. Update `.codex-plugin/plugin.json` and `package.json` with the new version.
 2. Add `## [X.Y.Z] - YYYY-MM-DD` to `CHANGELOG.md` with concrete Added, Changed, Fixed, or Removed entries.
 3. Run the repository checks, including `node scripts/check-release.mjs`.
 4. Commit the version and changelog together.

@@ -6,6 +6,11 @@
   <strong>Iterative software delivery with grounded UML and anti-slop quality gates.</strong>
 </p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/sdlc-architect"><img src="https://img.shields.io/npm/v/sdlc-architect.svg" alt="npm version" /></a>
+  <a href="https://github.com/greedykid/sdlc-architect-skill/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
+</p>
+
 <h1 align="center">SDLC Architect</h1>
 
 An agent skill for developing applications through an iterative SDLC workflow with repo-native documentation, Mermaid UML diagrams, and anti-slop quality gates.
@@ -35,6 +40,44 @@ skills/sdlc-architect/
 ```
 
 The root plugin manifests make the skill discoverable as a Codex plugin. The antislop bundle is available beside it under `skills/antislop*`. `skills/antislop-human/` also includes the contrast checker and its MCP launcher. The SDLC skill can also be copied from `skills/sdlc-architect/` into an Agent Skills-compatible skills directory.
+
+## Installation
+
+You can quickly install this skill into any repository or agent workspace using `npx`:
+
+```bash
+# Install sdlc-architect to ./skills/sdlc-architect
+npx sdlc-architect
+
+# Or install sdlc-architect along with all bundled antislop concern skills
+npx sdlc-architect --all
+
+# Or specify a custom target directory (e.g. for Codex, Claude Code, or Cursor)
+npx sdlc-architect install .agents/skills --all
+npx sdlc-architect install .claude/skills
+
+# Also copy artifact templates (templates/project-state.md)
+npx sdlc-architect --templates
+
+# Overwrite existing destination files
+npx sdlc-architect --force
+
+# List available bundled skills
+npx sdlc-architect list
+```
+
+### CLI Options
+
+| Option | Alias | Description |
+|---|---|---|
+| `--dest <path>` | `-d` | Destination directory (default: `./skills`) |
+| `--all` | `-a` | Install `sdlc-architect` and all bundled antislop concern skills |
+| `--skill <name>` | `-s` | Install a specific skill (e.g. `antislop-ui`) |
+| `--templates` | `-t` | Also copy artifact templates (`templates/project-state.md`) |
+| `--force` | `-f` | Overwrite existing files if destination already exists |
+| `list`, `--list` | | List bundled skills available to install |
+| `--help` | `-h` | Show CLI help |
+| `--version` | `-v` | Show CLI version |
 
 ## Antislop reference
 

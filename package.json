@@ -1,0 +1,46 @@
+{
+  "name": "sdlc-architect",
+  "version": "0.6.0",
+  "description": "Agent skill for developing applications through an iterative SDLC workflow with repo-native documentation, Mermaid UML diagrams, and anti-slop quality gates.",
+  "type": "module",
+  "main": "./bin/cli.mjs",
+  "bin": {
+    "sdlc-architect": "bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "templates",
+    "antislop.md",
+    "README.md",
+    "CHANGELOG.md",
+    "plugin.json",
+    ".codex-plugin"
+  ],
+  "scripts": {
+    "test": "node scripts/check-repo.mjs",
+    "check": "node scripts/check-repo.mjs && node scripts/check-governance.mjs && node scripts/check-forward-tests.mjs && node scripts/check-mermaid.mjs && node scripts/check-scenarios.mjs && node scripts/check-project-state.mjs templates/project-state.md && node scripts/check-release.mjs"
+  },
+  "keywords": [
+    "sdlc",
+    "agile",
+    "uml",
+    "mermaid",
+    "software-architecture",
+    "anti-slop",
+    "agent-skills",
+    "codex",
+    "claude",
+    "cursor"
+  ],
+  "author": "Rizki Arbiansyah",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greedykid/sdlc-architect-skill.git"
+  },
+  "homepage": "https://github.com/greedykid/sdlc-architect-skill",
+  "bugs": {
+    "url": "https://github.com/greedykid/sdlc-architect-skill/issues"
+  }
+}

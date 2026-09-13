@@ -16,6 +16,14 @@ if (!semver.test(version)) errors.push(`manifest version is not semantic version
 if (!changelog.includes(expectedHeading)) errors.push(`CHANGELOG.md has no section beginning with ${expectedHeading}`)
 if (tag && tag !== `v${version}`) errors.push(`tag ${tag} does not match manifest version v${version}`)
 
+const pkgFile = path.join(root, 'package.json')
+if (fs.existsSync(pkgFile)) {
+  const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf8'))
+  if (pkg.version !== version) {
+    errors.push(`package.json version (${pkg.version}) does not match manifest version (${version})`)
+  }
+}
+
 if (errors.length) {
   console.error(errors.map((error) => `FAIL: ${error}`).join('\n'))
   process.exit(1)
