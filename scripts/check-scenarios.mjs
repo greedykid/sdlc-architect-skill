@@ -9,7 +9,7 @@ const text = fs.readFileSync(file, 'utf8')
 const scenarios = [...text.matchAll(/^## (SCN-\d{3}): .+$/gm)].map((match) => match[1])
 const errors = []
 
-if (scenarios.length < 10) errors.push(`expected at least 10 scenarios, found ${scenarios.length}`)
+if (scenarios.length < 16) errors.push(`expected at least 16 scenarios, found ${scenarios.length}`)
 if (new Set(scenarios).size !== scenarios.length) errors.push('scenario IDs must be unique')
 for (const id of scenarios) {
   const start = text.indexOf(`## ${id}:`)

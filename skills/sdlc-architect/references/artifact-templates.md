@@ -149,3 +149,81 @@ Security/data/operations: <review, signals, rollback, and ownership>
 Risks and open decisions: <what remains and impact>
 Next increment: <smallest useful follow-up>
 ```
+
+## Project state
+
+```markdown
+# SDLC Project State
+
+State version: 1
+Updated: <ISO date and timezone>
+Mode: Plan | Build | Audit
+Phase: <current phase>
+Project classification: <classification>
+Iteration: <identifier>
+Active outcome: <one outcome>
+
+## Baseline
+- Repository and stack: <facts>
+- Entry points and commands: <facts>
+- Pre-existing failures: <facts or none>
+
+## Active traceability
+- Requirements: <REQ IDs>
+- Decisions: <ADR IDs>
+- Diagrams/contracts: <IDs>
+- Tests: <TEST IDs>
+- Operations: <OPS IDs>
+
+## Open decisions and risks
+| ID | Decision or risk | Impact | Owner | Status |
+| --- | --- | --- | --- | --- |
+
+## Last verification
+- Checks: <commands or manual checks>
+- Evidence grade: <Verified | Inferred | Assumed | Unknown>
+- Result: <outcome and gap>
+
+## Next action
+<smallest useful action and its mode>
+```
+
+## Iteration backlog item
+
+```markdown
+## <REQ or increment ID>: <short name>
+
+Status: Candidate | Ready | In Progress | Blocked | Verification | Done | Superseded | Rejected
+Outcome: <user or system value>
+Dependencies: <IDs or none>
+Risk: Low | Medium | High
+Scope: <in and out>
+Acceptance criteria: <observable outcomes>
+Verification: <test level and evidence>
+Blocker or next action: <owner and action, if applicable>
+```
+
+## Evidence record
+
+```markdown
+Evidence grade: Verified | Inferred | Assumed | Unknown
+Statement: <fact, decision, or claim>
+Basis: <command, file, test, runtime observation, source, or missing information>
+Impact: <what changes if this is wrong>
+Next check: <how to promote confidence, or why no check is needed>
+```
+
+## Migration and rollback record
+
+```markdown
+Change: <data, contract, or deployment change>
+Risk: <classification and reason>
+Expand: <compatible schema or contract step>
+Migrate/backfill: <order, idempotency, limits>
+Verify: <data, compatibility, and recovery checks>
+Switch: <reader, writer, traffic, or feature flag change>
+Contract: <old behavior removal and timing>
+Rollback trigger: <observable condition>
+Rollback or forward recovery: <procedure and irreversible limits>
+Owner and evidence: <person/team, rehearsal, backup/restore, or accepted limitation>
+```

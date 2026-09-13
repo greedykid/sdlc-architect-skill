@@ -2,6 +2,8 @@
 
 Use this reference to make the SDLC workflow traceable and risk-proportionate across new projects, existing repositories, monorepos, and multi-service systems. Preserve project-specific conventions when they already exist.
 
+Use [references/execution-protocol.md](execution-protocol.md) for cross-session state, backlog iteration, evidence grading, interview protocol, command discovery, migration sequencing, and forward-test execution.
+
 ## Traceability model
 
 Use stable IDs when the project has them. Otherwise use concise prefixes:

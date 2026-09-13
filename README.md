@@ -11,7 +11,9 @@ skills/sdlc-architect/
 └── references/
     ├── antislop-integration.md
     ├── artifact-templates.md
+    ├── execution-protocol.md
     ├── quality-gates.md
+    ├── project-governance.md
     ├── sdlc-workflow.md
     └── uml-mermaid.md
 ```
@@ -27,7 +29,9 @@ The root plugin manifests make the skill discoverable as a Codex plugin. The ant
 - Vendored antislop core plus UI, copywriting, human, mobile, and code-comment concern skills.
 - Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
 - Reusable artifact templates and behavioral forward-test scenarios.
+- Cross-session state, iteration protocol, evidence grading, command discovery, migration rollback, and an isolated forward-test execution plan.
 - Traceability IDs and matrix, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, monorepo boundaries, and maintenance governance.
+- Cross-session project state, backlog iteration, evidence grading, command discovery, migration rollback, and isolated forward-test evaluation.
 
 ## Validation
 
@@ -38,6 +42,7 @@ node scripts/check-repo.mjs
 node scripts/check-mermaid.mjs
 node scripts/check-scenarios.mjs
 node scripts/check-governance.mjs
+node scripts/check-forward-tests.mjs
 ```
 
 The skill itself can also be validated with the Codex skill validator:

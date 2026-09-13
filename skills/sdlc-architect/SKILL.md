@@ -22,6 +22,7 @@ Use this skill when the user wants to plan, design, document, build, test, or ev
 - Use the Definition of Ready before implementation and the Definition of Done before delivery. Read [references/quality-gates.md](references/quality-gates.md) for the checklists and impact analysis protocol.
 - Use [references/artifact-templates.md](references/artifact-templates.md) when a new brief, requirement, ADR, contract, data change, test plan, or release note is needed. Adapt templates to existing project conventions.
 - Maintain traceability from requirement to decision, diagram, implementation, test, and operational evidence. Read [references/project-governance.md](references/project-governance.md) for ID conventions, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, and maintenance rules.
+- Maintain a lightweight project state and bounded backlog across sessions. Read [references/execution-protocol.md](references/execution-protocol.md) for state persistence, iteration selection, evidence grading, interview questions, command discovery, and migration rollback.
 
 ## Phase routing
 
@@ -63,6 +64,8 @@ Read [references/artifact-templates.md](references/artifact-templates.md) when c
 
 Read [references/project-governance.md](references/project-governance.md) when the work involves traceability, a phase transition, risk classification, an existing project baseline, test-level selection, architecture decisions, monorepo or multi-service boundaries, handoff, maintenance, or stale artifacts.
 
+Read [references/execution-protocol.md](references/execution-protocol.md) when continuing work across sessions, selecting the next backlog item, resolving missing requirements, choosing project commands, changing persisted data, or running the forward-test catalog.
+
 Prefer these artifact relationships:
 
 - problem and goals → requirements/use cases → acceptance criteria;
@@ -81,12 +84,15 @@ Use the impact analysis in `references/quality-gates.md` for any change affectin
 
 For requirement status changes, mark items as `Active`, `Superseded`, `Rejected`, or `Done` and update the traceability matrix. Do not delete a requirement, test, ADR, or diagram merely because it is no longer current; preserve the decision history and mark the artifact's current status.
 
+Persist the current phase, increment, open decisions, risks, verification evidence, and next action in the project's SDLC state artifact when one exists. If it does not exist, propose the smallest state file using `references/execution-protocol.md` before starting a second increment.
+
 ## Language and terminology
 
 - Use the user's language for conversation unless the project clearly uses another language.
 - Follow the repository's existing language for committed artifacts and preserve established domain terms.
 - Do not translate identifiers, API fields, table names, or domain terms casually. If a terminology change is needed, document the old and new terms and update all affected artifacts together.
 - Use the same term for the same concept across requirements, code, tests, diagrams, and release notes.
+- Label important statements as `Verified`, `Inferred`, `Assumed`, or `Unknown` and never present a lower-confidence statement as verified without new evidence.
 
 ## Completion standard
 

@@ -131,3 +131,76 @@ Expected behavior:
 - Produce a handoff report with owner, recovery implications, and the next bounded increment.
 
 Acceptance: the maintenance action leaves a linked regression path and does not create an undocumented workaround.
+
+## SCN-011: Continue work from project state
+
+Prompt shape: “Continue the next increment from this existing project.” The repository contains `docs/sdlc/project-state.md` with an active risk and next action.
+
+Expected behavior:
+
+- Read and verify the state against the repository instead of restarting discovery.
+- Preserve active requirements, decisions, evidence grades, and unresolved risks.
+- Start from the recorded next action or explain why the repository disproves it.
+- Update the state after the increment or after a changed decision.
+
+Acceptance: the response uses the state as navigation without treating it as unquestionable source of truth.
+
+## SCN-012: Select the next backlog item
+
+Prompt shape: “Pick the next item from this backlog.” The backlog contains a blocked dependency, a high-risk item, and several Ready items.
+
+Expected behavior:
+
+- Consider dependency, risk, in-progress work, readiness, value, and uncertainty reduction.
+- Do not choose from priority labels alone.
+- Explain the selected item, why others wait, and its intended verification.
+
+Acceptance: the chosen item is the smallest feasible increment that respects blockers and risk.
+
+## SCN-013: Evidence confidence review
+
+Prompt shape: “Is this feature production-ready?” The repository has code and documentation but no runtime verification.
+
+Expected behavior:
+
+- Label direct checks `Verified`, conclusions `Inferred`, temporary premises `Assumed`, and missing facts `Unknown`.
+- Do not call the feature production-ready from code inspection alone.
+- Name the exact command, test, or runtime evidence needed to increase confidence.
+
+Acceptance: confidence labels match the evidence actually available.
+
+## SCN-014: Requirement interview
+
+Prompt shape: “Add this vague workflow.”
+
+Expected behavior:
+
+- Ask only questions that affect outcome, behavior, data/authority, constraints, or verification.
+- Ask the highest-impact blocking question first.
+- Stop when Definition of Ready is satisfied and avoid an open-ended questionnaire.
+
+Acceptance: each question has a concrete decision impact and the resulting increment is bounded.
+
+## SCN-015: Discover project commands
+
+Prompt shape: “Run the tests and tell me whether this change works.” The repository has CI and package scripts with one pre-existing failing check.
+
+Expected behavior:
+
+- Prefer documented or CI commands over guessed framework defaults.
+- Record exact commands, scope, results, and pre-existing failures.
+- Do not replace a failed command with a different command and claim the original verification passed.
+
+Acceptance: verification evidence distinguishes new failures from baseline failures.
+
+## SCN-016: Migration rollback planning
+
+Prompt shape: “Rename a live database field used by two deployed services.”
+
+Expected behavior:
+
+- Use expand, migrate/backfill, verify, switch, observe, and contract sequencing.
+- Define idempotency, backup/recovery point, rollback trigger, and forward recovery if reversal is impossible.
+- Require rehearsal or state the limitation and owner before calling the change safe.
+
+Acceptance: the plan covers both data compatibility and operational recovery, not only the forward migration.

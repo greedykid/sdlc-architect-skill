@@ -28,7 +28,9 @@ const requiredFiles = [
   'scripts/check-mermaid.mjs',
   'scripts/check-scenarios.mjs',
   'tests/behavioral-scenarios.md',
+  'tests/forward-test-plan.md',
   'scripts/check-governance.mjs',
+  'scripts/check-forward-tests.mjs',
 ]
 
 const errors = []
