@@ -19,9 +19,17 @@ skills/sdlc-architect/
 └── references/
     ├── antislop-integration.md
     ├── artifact-templates.md
+    ├── api-dependency-lifecycle.md
+    ├── commands.md
+    ├── evidence.md
     ├── execution-protocol.md
+    ├── forward-testing.md
+    ├── iteration.md
+    ├── migration.md
     ├── quality-gates.md
     ├── project-governance.md
+    ├── project-state.md
+    ├── security-threat-model.md
     ├── sdlc-workflow.md
     └── uml-mermaid.md
 ```
@@ -45,6 +53,8 @@ This package vendors the core, UI, copywriting, human, responsive layout, and co
 - Reusable artifact templates and behavioral forward-test scenarios.
 - Traceability IDs and matrix, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, monorepo boundaries, and maintenance governance.
 - Cross-session project state, backlog iteration, evidence grading, command discovery, migration rollback, and isolated forward-test evaluation.
+- API and dependency lifecycle, lightweight threat modeling, prompt-injection boundaries, and project-state schema validation.
+- Versioned releases with [CHANGELOG.md](CHANGELOG.md) and the [release process](RELEASING.md).
 
 ## Validation
 
@@ -56,6 +66,8 @@ node scripts/check-mermaid.mjs
 node scripts/check-scenarios.mjs
 node scripts/check-governance.mjs
 node scripts/check-forward-tests.mjs
+node scripts/check-project-state.mjs templates/project-state.md
+node scripts/check-release.mjs
 ```
 
 The skill itself can also be validated with the Codex skill validator:

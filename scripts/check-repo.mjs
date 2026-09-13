@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const requiredFiles = [
   'antislop.md',
+  'CHANGELOG.md',
+  'RELEASING.md',
   'plugin.json',
   '.codex-plugin/plugin.json',
   '.agents/plugins/marketplace.json',
@@ -23,6 +25,14 @@ const requiredFiles = [
   'skills/sdlc-architect/references/artifact-templates.md',
   'skills/sdlc-architect/references/quality-gates.md',
   'skills/sdlc-architect/references/project-governance.md',
+  'skills/sdlc-architect/references/project-state.md',
+  'skills/sdlc-architect/references/iteration.md',
+  'skills/sdlc-architect/references/evidence.md',
+  'skills/sdlc-architect/references/commands.md',
+  'skills/sdlc-architect/references/migration.md',
+  'skills/sdlc-architect/references/forward-testing.md',
+  'skills/sdlc-architect/references/api-dependency-lifecycle.md',
+  'skills/sdlc-architect/references/security-threat-model.md',
   'skills/sdlc-architect/references/sdlc-workflow.md',
   'skills/sdlc-architect/references/uml-mermaid.md',
   'scripts/check-mermaid.mjs',
@@ -31,6 +41,11 @@ const requiredFiles = [
   'tests/forward-test-plan.md',
   'scripts/check-governance.mjs',
   'scripts/check-forward-tests.mjs',
+  'scripts/check-project-state.mjs',
+  'scripts/run-forward-tests.mjs',
+  'scripts/check-release.mjs',
+  'scripts/extract-release-notes.mjs',
+  'templates/project-state.md',
 ]
 
 const errors = []

@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate release metadata
+        run: node scripts/check-release.mjs "$GITHUB_REF_NAME"
+      - name: Run repository checks
+        run: |
+          node scripts/check-repo.mjs
+          node scripts/check-governance.mjs
+          node scripts/check-forward-tests.mjs
+          node scripts/check-mermaid.mjs
+          node scripts/check-scenarios.mjs
+          node scripts/check-project-state.mjs templates/project-state.md
+          python3 skills/antislop-human/contrast-check.py --selftest
+      - name: Extract release notes
+        run: node scripts/extract-release-notes.mjs "$GITHUB_REF_NAME" > release-notes.md
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" --title "SDLC Architect $GITHUB_REF_NAME" --notes-file release-notes.md

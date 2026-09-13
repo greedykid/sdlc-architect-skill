@@ -26,5 +26,9 @@ jobs:
         run: node scripts/check-governance.mjs
       - name: Forward-test plan coverage
         run: node scripts/check-forward-tests.mjs
+      - name: Project state schema
+        run: node scripts/check-project-state.mjs templates/project-state.md
+      - name: Release metadata
+        run: node scripts/check-release.mjs
       - name: Contrast checker self-test
         run: python3 skills/antislop-human/contrast-check.py --selftest
