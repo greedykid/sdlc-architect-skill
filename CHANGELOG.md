@@ -2,6 +2,17 @@
 
 All notable changes to this skill are documented here. Each released version uses the matching Git tag `vX.Y.Z` and GitHub Release.
 
+## [0.6.5] - 2026-09-13
+
+### Added
+
+- Automated Shorthand Slash Command routing and execution protocol across AI agent platforms (Claude Code, Cursor, Copilot, Windsurf, Codex, Antigravity).
+- Added `references/slash-commands.md` defining deterministic execution steps, inputs, quality gates, and output artifacts for all 9 slash commands (`plan`, `build`, `audit`, `gate ready`, `gate done`, `adr`, `diagram`, `antislop`, `threat-model`).
+- Native Claude Code custom slash command adapter (`.claude/commands/sdlc.md`) generated via `npx sdlc-architect adapter claude`.
+- Automatic regex interception and high-priority rules in Cursor adapter (`.cursor/rules/sdlc-architect.mdc`) and Copilot instructions.
+- Added `gate [ready|done]` quality gate audit command to the CLI (`npx sdlc-architect gate ready` and `npx sdlc-architect gate done`).
+- Explicit slash command trigger matching in `SKILL.md` frontmatter description and `openai.yaml` for automatic skill invocation.
+
 ## [0.6.4] - 2026-09-13
 
 ### Added

@@ -67,8 +67,10 @@ npx sdlc-architect adr "use-redis-for-session-caching"
 # 5. Validate Mermaid diagrams in your Markdown docs (prevent broken diagrams in CI)
 npx sdlc-architect check-mermaid ./docs
 
-# 6. Run repository health check
+# 6. Run repository health check or quality gate audit
 npx sdlc-architect doctor
+npx sdlc-architect gate ready   # audit Definition of Ready before building
+npx sdlc-architect gate done    # audit Definition of Done and test suite
 
 # 7. Update installed skills to the latest package version
 npx sdlc-architect update
@@ -84,6 +86,7 @@ npx sdlc-architect update --adapters   # also refresh agent rules
 | `init [options]` | | Full initialization: copies skills, configures agent rules, state, and ADRs |
 | `adapter <platform>` | | Generate agent adapter (`cursor`, `claude`, `copilot`, `windsurf`, `github`, `all`) |
 | `adr <title>` | | Scaffold a numbered ADR in `docs/adr/000X-<slug>.md` |
+| `gate [ready\|done]` | | Quality Gate: audit Definition of Ready or Definition of Done |
 | `check-mermaid [path]` | | Validate Mermaid diagram syntax and fences in Markdown files |
 | `doctor`, `check` | | Health check: validates skills, project state, ADRs, and Mermaid diagrams |
 | `list` | | List bundled skills and descriptions |
@@ -98,9 +101,13 @@ npx sdlc-architect update --adapters   # also refresh agent rules
 | `--templates` | `-t` | Also copy artifact templates |
 | `--force` | `-f` | Overwrite existing files if destination already exists |
 
-## Shorthand Slash Commands
+## Automated Shorthand Slash Commands
 
-When interacting with an AI coding agent (Cursor, Claude Code, Codex, Copilot, etc.), trigger workflow phases with these shorthand commands:
+Shorthand slash commands automatically trigger and route to the corresponding SDLC phase across AI coding assistants:
+- **Claude Code**: Natively registered via `.claude/commands/sdlc.md` (supports auto-complete and argument passing).
+- **Cursor**: Intercepted via `.cursor/rules/sdlc-architect.mdc` using high-priority regex pattern matching.
+- **Codex / Antigravity / Gemini CLI**: Automatically activated via semantic skill trigger matching in `SKILL.md` frontmatter.
+- **GitHub Copilot & Windsurf**: Guided by `.github/copilot-instructions.md` and `.windsurfrules`.
 
 | Command | Phase / Mode | What the Agent Does |
 |---|---|---|

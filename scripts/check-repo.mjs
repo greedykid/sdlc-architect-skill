@@ -36,6 +36,7 @@ const requiredFiles = [
   'skills/sdlc-architect/references/api-dependency-lifecycle.md',
   'skills/sdlc-architect/references/security-threat-model.md',
   'skills/sdlc-architect/references/sdlc-workflow.md',
+  'skills/sdlc-architect/references/slash-commands.md',
   'skills/sdlc-architect/references/uml-mermaid.md',
   'scripts/check-mermaid.mjs',
   'scripts/check-scenarios.mjs',

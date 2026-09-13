@@ -7,8 +7,14 @@ You follow the SDLC Architect methodology:
 - **Anti-Slop Quality Gate**:
   - Keep comments focused on intent and edge cases; remove AI conversational filler.
   - Follow accessible design standards (WCAG AA contrast, proper keyboard navigation, responsive grids).
-- **Triggers**:
+- **Automated Triggers**:
   - `/sdlc plan <feature>`: Design increment without mutating code.
   - `/sdlc build <feature>`: Implement Ready increment with tests.
+  - `/sdlc audit [target]`: Inspect code/architecture for anti-patterns and evidence.
   - `/sdlc gate ready` / `/sdlc gate done`: Run quality gate audits.
   - `/sdlc adr <title>`: Record architecture decision in `docs/adr/`.
+  - `/sdlc diagram <type>`: Generate grounded Mermaid UML diagrams.
+  - `/sdlc antislop [scope]`: Run anti-slop audit on UI, copy, comments.
+  - `/sdlc threat-model`: Perform STRIDE and AI safety analysis.
+
+Read `skills/sdlc-architect/references/slash-commands.md` for execution rules.

@@ -15,9 +15,16 @@ When working in this repository, apply the **SDLC Architect** workflow:
 
 ## Shorthand Triggers
 
+Claude Code natively executes `/sdlc` via `.claude/commands/sdlc.md`. You can issue:
+
 - `/sdlc plan <feature>`: Inspect and design increment without modifying source code.
 - `/sdlc build <feature>`: Implement a Ready increment, write tests, verify against Done checklist.
-- `/sdlc gate ready`: Audit scope and acceptance criteria before implementation.
-- `/sdlc gate done`: Audit changes against test coverage, documentation, and anti-slop rules.
+- `/sdlc audit [target]`: Inspect code, architecture, or documentation. Produce prioritized findings.
+- `/sdlc gate ready`: Audit scope and acceptance criteria against Definition of Ready before implementation.
+- `/sdlc gate done`: Audit changes against Definition of Done, test coverage, documentation, and anti-slop rules.
 - `/sdlc adr <title>`: Scaffold a new Architecture Decision Record in `docs/adr/`.
-- `/sdlc antislop`: Audit UI, copy, accessibility, and code comments.
+- `/sdlc diagram <type>`: Generate grounded Mermaid UML diagrams (`sequence`, `flowchart`, `component`, etc.).
+- `/sdlc antislop [scope]`: Audit UI, copy, accessibility contrast, and code comments.
+- `/sdlc threat-model`: Perform STRIDE and AI safety analysis for high-risk changes.
+
+Read `skills/sdlc-architect/references/slash-commands.md` for the full automated execution protocol.

@@ -1,12 +1,27 @@
 ---
-description: SDLC Architect workflow rules for Cursor AI
+description: SDLC Architect workflow rules for Cursor AI (auto-triggers on /sdlc commands)
 globs: *
 alwaysApply: true
 ---
 
 # SDLC Architect - Cursor Rules
 
-You are guided by the **SDLC Architect** workflow principles:
+## Automatic Slash Command Interception
+Whenever the user's prompt begins with `/sdlc` or issues an SDLC shorthand command, immediately intercept the request and execute the corresponding workflow without requiring manual skill setup:
+
+- `/sdlc plan <feature>`: Design increment without mutating application code. Produce requirements, ADR, grounded Mermaid diagrams, and Ready tasks.
+- `/sdlc build <feature>`: Verify Definition of Ready, implement increment with tests, verify against Done checklist.
+- `/sdlc audit [target]`: Inspect code, architecture, or documentation. Produce prioritized findings with concrete evidence.
+- `/sdlc gate ready`: Audit pending increment against the 10-point Definition of Ready checklist.
+- `/sdlc gate done`: Audit branch/changes against the 10-point Definition of Done and anti-slop rules.
+- `/sdlc adr <title>`: Scaffold numbered Architecture Decision Record in `docs/adr/`.
+- `/sdlc diagram <type>`: Generate grounded Mermaid UML diagram (`sequence`, `flowchart`, `component`, `class`, `state`).
+- `/sdlc antislop [scope]`: Audit UI, copy, comments, and accessibility contrast against anti-slop rules.
+- `/sdlc threat-model`: Perform STRIDE and OWASP LLM security threat modeling.
+
+Read `skills/sdlc-architect/references/slash-commands.md` for the full automated execution protocol.
+
+## Core SDLC Principles
 
 1. **Iterative SDLC Workflow**:
    - Do not jump straight to full implementation without a clear increment specification and acceptance criteria.
@@ -25,9 +40,3 @@ You are guided by the **SDLC Architect** workflow principles:
 4. **Definition of Ready & Done**:
    - Ready: Scope defined, acceptance criteria clear, risks identified, no blocker ambiguity.
    - Done: Implementation complete, tests pass, documentation/state updated, no regression.
-
-5. **Shorthand Commands**:
-   - `/sdlc plan <feature>`: Design increment without mutating code.
-   - `/sdlc build <feature>`: Implement Ready increment with tests.
-   - `/sdlc gate ready` / `/sdlc gate done`: Run quality gate audits.
-   - `/sdlc adr <title>`: Create an architecture decision record in `docs/adr/`.

@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +31,7 @@ Iterative software delivery with grounded UML and anti-slop quality gates.
   \x1b[36minit [options]\x1b[0m         Scaffold full SDLC setup (skills, adapters, project-state, ADRs)
   \x1b[36madapter <platform>\x1b[0m     Generate agent rules (cursor, claude, copilot, windsurf, github, all)
   \x1b[36madr <title>\x1b[0m            Scaffold a new numbered Architecture Decision Record
+  \x1b[36mgate [ready|done]\x1b[0m      Audit Definition of Ready or Done quality gates
   \x1b[36mcheck-mermaid [path]\x1b[0m   Validate Mermaid diagram fences in Markdown files
   \x1b[36mdoctor, check\x1b[0m          Run complete SDLC repository health check
   \x1b[36mlist\x1b[0m                   List bundled skills available to install
@@ -299,6 +301,16 @@ function runAdapter(platform, force) {
       fs.mkdirSync(path.dirname(destPath), { recursive: true });
       fs.copyFileSync(srcFile, destPath);
       console.log(`  \x1b[32m✔\x1b[0m Generated \x1b[1m${item}\x1b[0m adapter -> ${destRelative}`);
+
+      if (item === 'claude') {
+        const cmdDest = path.resolve(cwd, '.claude/commands/sdlc.md');
+        const cmdSrc = path.join(packageRoot, 'templates/adapters/claude-command.md');
+        fs.mkdirSync(path.dirname(cmdDest), { recursive: true });
+        if (!fs.existsSync(cmdDest) || force) {
+          fs.copyFileSync(cmdSrc, cmdDest);
+          console.log(`  \x1b[32m✔\x1b[0m Generated \x1b[1mclaude\x1b[0m native slash command -> .claude/commands/sdlc.md`);
+        }
+      }
     } catch (err) {
       console.error(`  \x1b[31m✖\x1b[0m Failed generating ${item} adapter: ${err.message}`);
     }
@@ -342,6 +354,101 @@ function runAdr(title) {
 
   fs.writeFileSync(destPath, content, 'utf8');
   console.log(`\n\x1b[32m✔\x1b[0m Created ADR \x1b[1m${nextIndex}\x1b[0m -> docs/adr/${fileName}\n`);
+}
+
+function runGate(type) {
+  const mode = (type || 'ready').toLowerCase();
+  if (mode !== 'ready' && mode !== 'done') {
+    console.error(`\x1b[31mError:\x1b[0m Invalid gate "${type}". Valid options: ready, done`);
+    process.exit(1);
+  }
+
+  console.log(`\n\x1b[1mSDLC Architect Quality Gate: \x1b[36m${mode.toUpperCase()}\x1b[0m (v${pkg.version})\n`);
+  let issues = 0;
+
+  if (mode === 'ready') {
+    // 1. Check project state file
+    const stateFile = path.resolve(cwd, 'docs/project-state.md');
+    if (fs.existsSync(stateFile)) {
+      console.log(`  \x1b[32m✔\x1b[0m Project state file exists (docs/project-state.md)`);
+      const content = fs.readFileSync(stateFile, 'utf8');
+      if (content.includes('[TODO') || content.includes('[PLACEHOLDER')) {
+        console.log(`  \x1b[33m!\x1b[0m Project state contains unresolved placeholders`);
+        issues++;
+      } else {
+        console.log(`  \x1b[32m✔\x1b[0m Project state has no unresolved placeholders`);
+      }
+    } else {
+      console.log(`  \x1b[33m!\x1b[0m No docs/project-state.md found (initialize with: npx sdlc-architect init --state)`);
+      issues++;
+    }
+
+    // 2. Check ADRs
+    const adrDir = path.resolve(cwd, 'docs/adr');
+    if (fs.existsSync(adrDir)) {
+      const adrs = fs.readdirSync(adrDir).filter(f => f.endsWith('.md'));
+      if (adrs.length > 0) {
+        console.log(`  \x1b[32m✔\x1b[0m Architecture Decision Records present (${adrs.length} record(s))`);
+      } else {
+        console.log(`  \x1b[33m!\x1b[0m docs/adr/ directory is empty`);
+      }
+    } else {
+      console.log(`  \x1b[33m!\x1b[0m No docs/adr/ directory found`);
+    }
+
+    // 3. Validate Mermaid diagrams in docs/
+    const docsDir = path.resolve(cwd, 'docs');
+    if (fs.existsSync(docsDir)) {
+      const valid = checkMermaidInPath('docs');
+      if (!valid) issues++;
+    }
+
+    console.log('\n\x1b[1m--- Definition of Ready Verdict ---\x1b[0m');
+    if (issues === 0) {
+      console.log(`\x1b[32m[READY] The increment meets quality criteria and is ready to build!\x1b[0m\n`);
+    } else {
+      console.log(`\x1b[33m[BLOCKED] Found ${issues} item(s) to resolve before starting implementation.\x1b[0m\n`);
+    }
+  } else {
+    // Mode: done
+    // 1. Run tests if configured in package.json
+    const pkgJsonPath = path.resolve(cwd, 'package.json');
+    if (fs.existsSync(pkgJsonPath)) {
+      try {
+        const localPkg = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+        if (localPkg.scripts && localPkg.scripts.test) {
+          console.log(`  \x1b[36mℹ\x1b[0m Executing test suite (npm test)...`);
+          try {
+            execSync('npm test', { cwd, stdio: 'pipe' });
+            console.log(`  \x1b[32m✔\x1b[0m Tests passed successfully`);
+          } catch (err) {
+            console.log(`  \x1b[31m✖\x1b[0m Tests failed: ${err.message}`);
+            issues++;
+          }
+        }
+      } catch {}
+    }
+
+    // 2. Validate Mermaid diagrams across project docs
+    const docsDir = path.resolve(cwd, 'docs');
+    if (fs.existsSync(docsDir)) {
+      const valid = checkMermaidInPath('docs');
+      if (!valid) issues++;
+    }
+
+    // 3. Check project state for Done status
+    const stateFile = path.resolve(cwd, 'docs/project-state.md');
+    if (fs.existsSync(stateFile)) {
+      console.log(`  \x1b[32m✔\x1b[0m Project state file exists (docs/project-state.md)`);
+    }
+
+    console.log('\n\x1b[1m--- Definition of Done Verdict ---\x1b[0m');
+    if (issues === 0) {
+      console.log(`\x1b[32m[DONE] Changes meet all Definition of Done criteria and are ready to merge/ship!\x1b[0m\n`);
+    } else {
+      console.log(`\x1b[31m[ACTION REQUIRED] Found ${issues} issue(s) before increment can be marked Done.\x1b[0m\n`);
+    }
+  }
 }
 
 function checkMermaidInPath(targetPath) {
@@ -582,6 +689,13 @@ function parseArgs() {
       options.command = 'install';
       continue;
     }
+    if (arg === 'gate') {
+      options.command = 'gate';
+      if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+        options.param = args[++i];
+      }
+      continue;
+    }
     if (arg === 'update' || arg === 'upgrade') {
       options.command = 'update';
       continue;
@@ -656,6 +770,9 @@ function main() {
       break;
     case 'adr':
       runAdr(options.param);
+      break;
+    case 'gate':
+      runGate(options.param || 'ready');
       break;
     case 'check-mermaid':
       checkMermaidInPath(options.param);

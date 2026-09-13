@@ -1,6 +1,6 @@
 ---
 name: sdlc-architect
-description: "Guide application development through iterative SDLC phases, UML diagrams, and anti-slop quality gates for grounded, usable interfaces."
+description: "Guide application development through iterative SDLC phases, UML diagrams, and anti-slop quality gates. Automatically activates on /sdlc slash commands (/sdlc, /sdlc plan, /sdlc build, /sdlc audit, /sdlc gate, /sdlc adr, /sdlc diagram, /sdlc antislop, /sdlc threat-model) or when planning, designing, auditing, building, or reviewing software architecture."
 ---
 
 # SDLC Architect
@@ -54,7 +54,7 @@ Do not silently continue from Plan into Build. If the user asks to “build” w
 
 ## Slash commands and triggers
 
-Recognize and execute these shorthand commands directly when issued by the user:
+Recognize and execute these shorthand commands automatically when issued by the user or agent platform. Read [references/slash-commands.md](references/slash-commands.md) for the automated execution protocol, input parameters, and output artifacts for each command:
 
 | Command | Phase / Mode | Agent Action |
 |---|---|---|

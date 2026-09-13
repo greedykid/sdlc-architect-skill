@@ -1,4 +1,4 @@
 interface:
   display_name: "SDLC Architect"
   short_description: "Build apps with SDLC, UML, and anti-slop gates"
-  default_prompt: "Use $sdlc-architect to plan and build this application through iterative SDLC phases, grounded Mermaid diagrams, and anti-slop quality gates."
+  default_prompt: "Use $sdlc-architect to plan and build this application through iterative SDLC phases, grounded Mermaid diagrams, and anti-slop quality gates. Automatically triggers on /sdlc slash commands (/sdlc plan, build, audit, gate, adr, diagram, antislop, threat-model)."
