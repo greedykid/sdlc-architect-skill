@@ -1,4 +1,12 @@
-# SDLC Architect
+<p align="center">
+  <img src="./assets/sdlc-architect-wordmark.svg" alt="SDLC Architect" width="720" />
+</p>
+
+<p align="center">
+  <strong>Iterative software delivery with grounded UML and anti-slop quality gates.</strong>
+</p>
+
+<h1 align="center">SDLC Architect</h1>
 
 An agent skill for developing applications through an iterative SDLC workflow with repo-native documentation, Mermaid UML diagrams, and anti-slop quality gates.
 
@@ -29,7 +37,6 @@ The root plugin manifests make the skill discoverable as a Codex plugin. The ant
 - Vendored antislop core plus UI, copywriting, human, mobile, and code-comment concern skills.
 - Definition of Ready and Done, security/data review, change impact analysis, and operational delivery gates.
 - Reusable artifact templates and behavioral forward-test scenarios.
-- Cross-session state, iteration protocol, evidence grading, command discovery, migration rollback, and an isolated forward-test execution plan.
 - Traceability IDs and matrix, phase transitions, risk levels, project baselines, test selection, ADR lifecycle, monorepo boundaries, and maintenance governance.
 - Cross-session project state, backlog iteration, evidence grading, command discovery, migration rollback, and isolated forward-test evaluation.
 
